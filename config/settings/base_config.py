@@ -16,7 +16,7 @@ from datetime import datetime
 PROJECT_ROOT = Path(__file__).parent.parent
 
 # Database path - main SQLite database for all KHAZAD_DUM data
-DATABASE_PATH = PROJECT_ROOT / "data" / "databases" / "khazad_dum.db"
+DATABASE_PATH = PROJECT_ROOT / "config" / "data" / "databases" / "khazad_dum.db"
 
 # Data directories
 DATA_DIR = PROJECT_ROOT / "data"         # General data storage

@@ -1,0 +1,5 @@
+# KHAZAD_DUM Monitor CLI Dependencies
+rich>=13.7.0
+plotext>=5.2.8
+psycopg2-binary>=2.9.9  # For PostgreSQL connection
+python-dotenv>=1.0.0    # For environment variables

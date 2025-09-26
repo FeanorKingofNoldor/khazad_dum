@@ -17,3 +17,8 @@ asyncio-mqtt
 
 # Optional: For better error handling and logging
 loguru
+
+# KHAZAD_DUM Monitor CLI Dependencies
+rich
+plotext
+psycopg2-binary # For PostgreSQL connection
