@@ -22,3 +22,4 @@ loguru
 rich
 plotext
 psycopg2-binary # For PostgreSQL connection
+prompt-toolkit
