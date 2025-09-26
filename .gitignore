@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Project specific
+*.db
+*.log
+cache/
+data/databases/*.db
+logs/
+results/
+backup_*
+migration_log.json
+
+# Sensitive
+.env
+*.env
+config/api_keys.py
+
+# OS
+.DS_Store
+Thumbs.db
+
+# TradingAgents cache
+tradingagents_lib/dataflows/data_cache/
+eval_results/

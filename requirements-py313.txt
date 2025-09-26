@@ -1,0 +1,19 @@
+# Let pip find compatible versions for Python 3.13
+yfinance
+pandas
+numpy
+python-dotenv
+beautifulsoup4
+requests
+lxml
+schedule
+sqlalchemy
+redis
+# Core IBKR API
+ib_async
+
+# Async support
+asyncio-mqtt
+
+# Optional: For better error handling and logging
+loguru
