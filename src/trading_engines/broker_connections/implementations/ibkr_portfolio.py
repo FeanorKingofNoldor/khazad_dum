@@ -4,10 +4,11 @@ Pure data retrieval - no business logic
 """
 
 import logging
+import asyncio
 from typing import Dict, List, Any, Optional
 from datetime import datetime
 
-from .connection import IBKRConnection
+from .ibkr_connection import IBKRConnection
 
 logger = logging.getLogger(__name__)
 

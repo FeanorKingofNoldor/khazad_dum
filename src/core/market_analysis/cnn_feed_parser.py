@@ -1,6 +1,60 @@
 """
-Custom CNN Fear & Greed Index scraper
-Since the package doesn't support Python 3.13
+██╗  ██╗██╗  ██╗ █████╗ ███████╗ █████╗ ██████╗       ██████╗ ██╗   ██╗███╗   ███╗
+██║ ██╔╝██║  ██║██╔══██╗╚══███╔╝██╔══██╗██╔══██╗      ██╔══██╗██║   ██║████╗ ████║
+█████╔╝ ███████║███████║  ███╔╝ ███████║██║  ██║█████╗██║  ██║██║   ██║██╔████╔██║
+██╔═██╗ ██╔══██║██╔══██║ ███╔╝  ██╔══██║██║  ██║╚════╝██║  ██║██║   ██║██║╚██╔╝██║
+██║  ██╗██║  ██║██║  ██║███████╗██║  ██║██████╔╝      ██████╔╝╚██████╔╝██║ ╚═╝ ██║
+╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝       ╚═════╝  ╚═════╝ ╚═╝     ╚═╝
+
+🏔️ ALGORITHMIC TRADING SYSTEM - "They delved too greedily and too deep..."
+
+┌─────────────────────────────────────────────────────────────────────────────────────┐
+│ 📋 MODULE: CNN Fear & Greed Index Parser                                      │
+│ 📄 FILE: cnn_feed_parser.py                                                    │
+│ 📅 CREATED: 2024-12-21                                                             │
+│ 👑 AUTHOR: FeanorKingofNoldor                                                      │
+│ 🔗 REPOSITORY: https://github.com/FeanorKingofNoldor/khazad_dum                   │
+│ 📧 CONTACT: [Your Contact Info]                                                    │
+│                                                                                     │
+│ 🎯 PURPOSE:                                                                        │
+│ Custom CNN Fear & Greed Index scraper (Python 3.13 compatible)                    │
+│                                                                                     │
+│ 🔧 DEPENDENCIES:                                                                   │
+│ - requests (HTTP client)                                                           │
+│ - json (data parsing)                                                              │
+│ - yfinance (VIX fallback)                                                          │
+│                                                                                     │
+│ 📈 TRADING PIPELINE STAGE: 1. Market Regime Detection                           │
+│ └── 1. Market Regime Detection ← YOU ARE HERE                                    │
+│ └── 2. Stock Screening                                                             │
+│ └── 3. AI Analysis (TradingAgents)                                                 │
+│ └── 4. Pattern Recognition                                                         │
+│ └── 5. Portfolio Construction                                                      │
+│ └── 6. Performance Observation                                                     │
+│                                                                                     │
+│ ⚠️  CRITICAL NOTES:                                                                │
+│ - Fallback to VIX-based regime when CNN API fails                                 │
+│ - Browser-like headers to avoid blocking                                          │
+│ - Robust error handling for network issues                                        │
+│                                                                                     │
+│ 📊 PERFORMANCE NOTES:                                                              │
+│ - API call latency: ~500ms (network dependent)                                   │
+│ - 10-second timeout to prevent hanging                                            │
+│ - Automatic text label generation from numeric score                             │
+│                                                                                     │
+│ 🧪 TESTING:                                                                        │
+│ - Unit Tests: tests/unit/test_cnn_feed_parser.py                                  │
+│ - Integration Tests: tests/integration/test_market_analysis_integration.py        │
+│                                                                                     │
+│ 📚 DOCUMENTATION:                                                                  │
+│ - API Docs: Auto-generated from docstrings                                        │
+│ - Usage Guide: docs/guides/CNN_PARSER_USAGE.md                                    │
+└─────────────────────────────────────────────────────────────────────────────────────┘
+
+Licensed under MIT License - See LICENSE file for details
+Copyright (c) 2024 FeanorKingofNoldor
+
+"In the depths of Khazad-dûm, the markets reveal their secrets to those who dare..."
 """
 
 import requests

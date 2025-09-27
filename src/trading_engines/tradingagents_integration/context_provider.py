@@ -39,10 +39,11 @@ class PortfolioContextProvider:
         
         if use_ibkr:
             try:
-                from src.trading_engines.broker_connections.implementations.ibkr_connector import IBKRPortfolioConnector
+                # Use the new centralized IBKR facade
+                from src.trading_engines.broker_connections.implementations.ibkr_facade import IBKRPortfolioConnector
                 self.ibkr_connector = IBKRPortfolioConnector(IBKR_HOST, ibkr_port, IBKR_CLIENT_ID)
                 if self.ibkr_connector.connect_sync():
-                    logger.info(f"Connected to IBKR on port {ibkr_port}")
+                    logger.info(f"Connected to IBKR on port {ibkr_port} via centralized connection manager")
                 else:
                     logger.warning("Failed to connect to IBKR")
                     self.ibkr_connector = None

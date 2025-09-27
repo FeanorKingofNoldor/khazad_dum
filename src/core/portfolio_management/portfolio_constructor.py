@@ -1,6 +1,61 @@
 """
-Portfolio Constructor Module
-Selects optimal portfolio from TradingAgents analysis results
+██╗  ██╗██╗  ██╗ █████╗ ███████╗ █████╗ ██████╗       ██████╗ ██╗   ██╗███╗   ███╗
+██║ ██╔╝██║  ██║██╔══██╗╚══███╔╝██╔══██╗██╔══██╗      ██╔══██╗██║   ██║████╗ ████║
+█████╔╝ ███████║███████║  ███╔╝ ███████║██║  ██║█████╗██║  ██║██║   ██║██╔████╔██║
+██╔═██╗ ██╔══██║██╔══██║ ███╔╝  ██╔══██║██║  ██║╚════╝██║  ██║██║   ██║██║╚██╔╝██║
+██║  ██╗██║  ██║██║  ██║███████╗██║  ██║██████╔╝      ██████╔╝╚██████╔╝██║ ╚═╝ ██║
+╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝       ╚═════╝  ╚═════╝ ╚═╝     ╚═╝
+
+🏔️ ALGORITHMIC TRADING SYSTEM - "They delved too greedily and too deep..."
+
+┌─────────────────────────────────────────────────────────────────────────────────────┐
+│ 📋 MODULE: Portfolio Construction & Optimization                               │
+│ 📄 FILE: portfolio_constructor.py                                              │
+│ 📅 CREATED: 2024-12-21                                                             │
+│ 👑 AUTHOR: FeanorKingofNoldor                                                      │
+│ 🔗 REPOSITORY: https://github.com/FeanorKingofNoldor/khazad_dum                   │
+│ 📧 CONTACT: [Your Contact Info]                                                    │
+│                                                                                     │
+│ 🎯 PURPOSE:                                                                        │
+│ Selects optimal portfolio from TradingAgents analysis using quantitative filters  │
+│                                                                                     │
+│ 🔧 DEPENDENCIES:                                                                   │
+│ - LangChain OpenAI (LLM integration)                                               │
+│ - pandas (data analysis)                                                           │
+│ - numpy (numerical operations)                                                     │
+│ - Local LLM endpoint (Tesla V100 backend)                                         │
+│                                                                                     │
+│ 📈 TRADING PIPELINE STAGE: 5. Portfolio Construction                            │
+│ └── 1. Market Regime Detection                                                     │
+│ └── 2. Stock Screening                                                             │
+│ └── 3. AI Analysis (TradingAgents)                                                 │
+│ └── 4. Pattern Recognition                                                         │
+│ └── 5. Portfolio Construction ← YOU ARE HERE                                    │
+│ └── 6. Performance Observation                                                     │
+│                                                                                     │
+│ ⚠️  CRITICAL NOTES:                                                                │
+│ - Combines quantitative filters with LLM-based selection                          │
+│ - Sector diversification (max 2 per sector)                                       │
+│ - Risk-adjusted scoring and position sizing                                        │
+│                                                                                     │
+│ 📊 PERFORMANCE NOTES:                                                              │
+│ - Quantitative filtering: ~50ms for 30 candidates                                │
+│ - LLM selection: ~2-5s depending on model                                         │
+│ - Position sizing calculation: ~10ms                                              │
+│                                                                                     │
+│ 🧪 TESTING:                                                                        │
+│ - Unit Tests: tests/unit/test_portfolio_constructor.py                            │
+│ - Integration Tests: tests/integration/test_portfolio_integration.py              │
+│                                                                                     │
+│ 📚 DOCUMENTATION:                                                                  │
+│ - API Docs: Auto-generated from docstrings                                        │
+│ - Usage Guide: docs/guides/PORTFOLIO_CONSTRUCTION_USAGE.md                        │
+└─────────────────────────────────────────────────────────────────────────────────────┘
+
+Licensed under MIT License - See LICENSE file for details
+Copyright (c) 2024 FeanorKingofNoldor
+
+"In the depths of Khazad-dûm, the markets reveal their secrets to those who dare..."
 """
 
 import json

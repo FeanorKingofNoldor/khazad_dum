@@ -1,3 +1,64 @@
+#!/usr/bin/env python3
+"""
+██╗  ██╗██╗  ██╗ █████╗ ███████╗ █████╗ ██████╗       ██████╗ ██╗   ██╗███╗   ███╗
+██║ ██╔╝██║  ██║██╔══██╗╚══███╔╝██╔══██╗██╔══██╗      ██╔══██╗██║   ██║████╗ ████║
+█████╔╝ ███████║███████║  ███╔╝ ███████║██║  ██║█████╗██║  ██║██║   ██║██╔████╔██║
+██╔═██╗ ██╔══██║██╔══██║ ███╔╝  ██╔══██║██║  ██║╚════╝██║  ██║██║   ██║██║╚██╔╝██║
+██║  ██╗██║  ██║██║  ██║███████╗██║  ██║██████╔╝      ██████╔╝╚██████╔╝██║ ╚═╝ ██║
+╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝       ╚═════╝  ╚═════╝ ╚═╝     ╚═╝
+
+🏔️ ALGORITHMIC TRADING SYSTEM - "They delved too greedily and too deep..."
+
+┌─────────────────────────────────────────────────────────────────────────────────────┐
+│ 📋 MODULE: Market Data Fetching & Technical Analysis                            │
+│ 📄 FILE: stock_data_fetcher.py                                                 │
+│ 📅 CREATED: 2024-12-21                                                             │
+│ 👑 AUTHOR: FeanorKingofNoldor                                                      │
+│ 🔗 REPOSITORY: https://github.com/FeanorKingofNoldor/khazad_dum                   │
+│ 📧 CONTACT: [Your Contact Info]                                                    │
+│                                                                                     │
+│ 🎯 PURPOSE:                                                                        │
+│ Fetches S&P 500 market data and calculates technical indicators for screening     │
+│                                                                                     │
+│ 🔧 DEPENDENCIES:                                                                   │
+│ - yfinance (market data API)                                                       │
+│ - pandas (data manipulation)                                                       │
+│ - numpy (numerical calculations)                                                   │
+│ - Multiple S&P 500 ticker sources with fallback                                   │
+│                                                                                     │
+│ 📈 TRADING PIPELINE STAGE: Data Pipeline (Pre-Screening)                        │
+│ └── 1. Market Regime Detection                                                     │
+│ └── 2. Stock Screening ← Data Source                                            │
+│ └── 3. AI Analysis (TradingAgents)                                                 │
+│ └── 4. Pattern Recognition                                                         │
+│ └── 5. Portfolio Construction                                                      │
+│ └── 6. Performance Observation                                                     │
+│                                                                                     │
+│ ⚠️  CRITICAL NOTES:                                                                │
+│ - Processes entire S&P 500 universe in batches                                    │
+│ - Fallback ticker list if external sources fail                                   │
+│ - Calculates RSI(2), ATR, moving averages, volume metrics                        │
+│                                                                                     │
+│ 📊 PERFORMANCE NOTES:                                                              │
+│ - Batch processing: 50 tickers per batch with 1s delay                          │
+│ - Complete S&P 500 fetch: ~10-15 minutes                                         │
+│ - 24-hour ticker list caching for efficiency                                      │
+│                                                                                     │
+│ 🧪 TESTING:                                                                        │
+│ - Unit Tests: tests/unit/test_stock_data_fetcher.py                               │
+│ - Integration Tests: tests/integration/test_data_pipeline_integration.py          │
+│                                                                                     │
+│ 📚 DOCUMENTATION:                                                                  │
+│ - API Docs: Auto-generated from docstrings                                        │
+│ - Usage Guide: docs/guides/DATA_FETCHING_USAGE.md                                 │
+└─────────────────────────────────────────────────────────────────────────────────────┘
+
+Licensed under MIT License - See LICENSE file for details
+Copyright (c) 2024 FeanorKingofNoldor
+
+"In the depths of Khazad-dûm, the markets reveal their secrets to those who dare..."
+"""
+
 import pandas as pd
 import yfinance as yf
 import numpy as np

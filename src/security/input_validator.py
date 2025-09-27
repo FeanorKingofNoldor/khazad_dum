@@ -1,6 +1,61 @@
 """
-Comprehensive Input Validation Module for KHAZAD_DUM Trading System
-Prevents injection attacks and validates all external inputs
+██╗  ██╗██╗  ██╗ █████╗ ███████╗ █████╗ ██████╗       ██████╗ ██╗   ██╗███╗   ███╗
+██║ ██╔╝██║  ██║██╔══██╗╚══███╔╝██╔══██╗██╔══██╗      ██╔══██╗██║   ██║████╗ ████║
+█████╔╝ ███████║███████║  ███╔╝ ███████║██║  ██║█████╗██║  ██║██║   ██║██╔████╔██║
+██╔═██╗ ██╔══██║██╔══██║ ███╔╝  ██╔══██║██║  ██║╚════╝██║  ██║██║   ██║██║╚██╔╝██║
+██║  ██╗██║  ██║██║  ██║███████╗██║  ██║██████╔╝      ██████╔╝╚██████╔╝██║ ╚═╝ ██║
+╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝       ╚═════╝  ╚═════╝ ╚═╝     ╚═╝
+
+🏔️ ALGORITHMIC TRADING SYSTEM - "They delved too greedily and too deep..."
+
+┌─────────────────────────────────────────────────────────────────────────────────────┐
+│ 📋 MODULE: Security & Input Validation                                          │
+│ 📄 FILE: input_validator.py                                                     │
+│ 📅 CREATED: 2024-12-21                                                             │
+│ 👑 AUTHOR: FeanorKingofNoldor                                                      │
+│ 🔗 REPOSITORY: https://github.com/FeanorKingofNoldor/khazad_dum                   │
+│ 📧 CONTACT: [Your Contact Info]                                                    │
+│                                                                                     │
+│ 🎯 PURPOSE:                                                                        │
+│ Comprehensive input validation & sanitization to prevent injection attacks         │
+│                                                                                     │
+│ 🔧 DEPENDENCIES:                                                                   │
+│ - bleach (HTML/XSS sanitization)                                                   │
+│ - decimal (precise numeric validation)                                             │
+│ - regex patterns for injection detection                                           │
+│ - structured logging for security events                                           │
+│                                                                                     │
+│ 📈 TRADING PIPELINE STAGE: Security Layer (All Stages)                          │
+│ └── 1. Market Regime Detection                                                     │
+│ └── 2. Stock Screening                                                             │
+│ └── 3. AI Analysis (TradingAgents)                                                 │
+│ └── 4. Pattern Recognition                                                         │
+│ └── 5. Portfolio Construction                                                      │
+│ └── 6. Performance Observation                                                     │
+│                                                                                     │
+│ ⚠️  CRITICAL NOTES:                                                                │
+│ - ALL external inputs MUST pass through validation                                │
+│ - Security violations are logged and blocked immediately                           │
+│ - Uses both pattern matching and content sanitization                             │
+│                                                                                     │
+│ 📊 PERFORMANCE NOTES:                                                              │
+│ - Input validation: ~1-5ms per validation call                                   │
+│ - Regex pattern matching optimized for speed                                      │
+│ - Sanitization preserves data integrity while ensuring security                   │
+│                                                                                     │
+│ 🧪 TESTING:                                                                        │
+│ - Unit Tests: tests/unit/test_input_validator.py                                  │
+│ - Security Tests: tests/security/test_injection_prevention.py                    │
+│                                                                                     │
+│ 📚 DOCUMENTATION:                                                                  │
+│ - API Docs: Auto-generated from docstrings                                        │
+│ - Security Guide: docs/guides/SECURITY_VALIDATION.md                              │
+└─────────────────────────────────────────────────────────────────────────────────────┘
+
+Licensed under MIT License - See LICENSE file for details
+Copyright (c) 2024 FeanorKingofNoldor
+
+"In the depths of Khazad-dûm, the markets reveal their secrets to those who dare..."
 """
 
 import re

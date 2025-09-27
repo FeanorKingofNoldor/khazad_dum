@@ -7,7 +7,8 @@ import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from src.trading_engines.broker_connections.implementations.ibkr_connector import IBKRPortfolioConnector, test_ibkr_connection
+# Use new centralized IBKR architecture
+from trading_engines.broker_connections.implementations.ibkr_facade import IBKRPortfolioConnector
 
 
 def quick_test():

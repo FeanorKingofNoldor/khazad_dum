@@ -11,6 +11,7 @@ sqlalchemy
 redis
 # Core IBKR API
 ib_async
+ibapi
 
 # Async support
 asyncio-mqtt

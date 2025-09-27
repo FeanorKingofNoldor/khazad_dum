@@ -1,7 +1,62 @@
 #!/usr/bin/env python3
 """
-Khazad-dûm Web Monitoring Dashboard
-Mobile-friendly web interface for remote system monitoring
+██╗  ██╗██╗  ██╗ █████╗ ███████╗ █████╗ ██████╗       ██████╗ ██╗   ██╗███╗   ███╗
+██║ ██╔╝██║  ██║██╔══██╗╚══███╔╝██╔══██╗██╔══██╗      ██╔══██╗██║   ██║████╗ ████║
+█████╔╝ ███████║███████║  ███╔╝ ███████║██║  ██║█████╗██║  ██║██║   ██║██╔████╔██║
+██╔═██╗ ██╔══██║██╔══██║ ███╔╝  ██╔══██║██║  ██║╚════╝██║  ██║██║   ██║██║╚██╔╝██║
+██║  ██╗██║  ██║██║  ██║███████╗██║  ██║██████╔╝      ██████╔╝╚██████╔╝██║ ╚═╝ ██║
+╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝       ╚═════╝  ╚═════╝ ╚═╝     ╚═╝
+
+🏔️ ALGORITHMIC TRADING SYSTEM - "They delved too greedily and too deep..."
+
+┌─────────────────────────────────────────────────────────────────────────────────────┐
+│ 📋 MODULE: Web Monitoring Dashboard                                                 │
+│ 📄 FILE: app.py                                                                    │
+│ 📅 CREATED: 2024-12-21                                                             │
+│ 👑 AUTHOR: FeanorKingofNoldor                                                      │
+│ 🔗 REPOSITORY: https://github.com/FeanorKingofNoldor/khazad_dum                   │
+│ 📧 CONTACT: [Your Contact Info]                                                    │
+│                                                                                     │
+│ 🎯 PURPOSE:                                                                        │
+│ Mobile-friendly web interface for remote monitoring of trading system status       │
+│                                                                                     │
+│ 🔧 DEPENDENCIES:                                                                   │
+│ - FastAPI web framework                                                            │
+│ - WebSocket real-time communication                                                │
+│ - Jinja2 templates                                                                 │
+│ - SQLite/PostgreSQL database                                                       │
+│                                                                                     │
+│ 📈 TRADING PIPELINE STAGE: System Monitoring (All Stages)                        │
+│ └── 1. Market Regime Detection                                                     │
+│ └── 2. Stock Screening                                                             │
+│ └── 3. AI Analysis (TradingAgents)                                                 │
+│ └── 4. Pattern Recognition                                                         │
+│ └── 5. Portfolio Construction                                                      │
+│ └── 6. Performance Observation ← Primary Focus                                    │
+│                                                                                     │
+│ ⚠️  CRITICAL NOTES:                                                                │
+│ - Requires active database connection                                              │
+│ - WebSocket connections auto-broadcast updates                                     │
+│ - Mobile-optimized responsive design                                               │
+│                                                                                     │
+│ 📊 PERFORMANCE NOTES:                                                              │
+│ - Real-time updates via WebSocket (< 100ms latency)                              │
+│ - Supports multiple concurrent connections                                         │
+│ - Database queries optimized for dashboard display                                │
+│                                                                                     │
+│ 🧪 TESTING:                                                                        │
+│ - Unit Tests: tests/unit/test_web_dashboard.py                                    │
+│ - Integration Tests: tests/integration/test_dashboard_integration.py              │
+│                                                                                     │
+│ 📚 DOCUMENTATION:                                                                  │
+│ - API Docs: Auto-generated from docstrings                                        │
+│ - Usage Guide: docs/guides/WEB_DASHBOARD_USAGE.md                                 │
+└─────────────────────────────────────────────────────────────────────────────────────┘
+
+Licensed under MIT License - See LICENSE file for details
+Copyright (c) 2024 FeanorKingofNoldor
+
+"In the depths of Khazad-dûm, the markets reveal their secrets to those who dare..."
 """
 
 import asyncio

@@ -72,7 +72,16 @@ class IBKRPortfolioConnector:
     
     def connect_sync(self):
         """Synchronous wrapper for connect"""
-        return asyncio.get_event_loop().run_until_complete(self.connect())
+        try:
+            loop = asyncio.get_running_loop()
+            # We're already in a loop, use ThreadPoolExecutor
+            import concurrent.futures
+            with concurrent.futures.ThreadPoolExecutor() as executor:
+                future = executor.submit(lambda: asyncio.run(self.connect()))
+                return future.result(timeout=30)
+        except RuntimeError:
+            # No event loop running, safe to use run_until_complete
+            return asyncio.get_event_loop().run_until_complete(self.connect())
     
     async def disconnect(self):
         """Disconnect from IBKR"""
@@ -254,7 +263,17 @@ class IBKRPortfolioConnector:
             return positions, account, orders
         
         try:
-            positions, account, orders = asyncio.get_event_loop().run_until_complete(_get_data())
+            # Check if we're already in an event loop
+            try:
+                loop = asyncio.get_running_loop()
+                # We're already in a loop, use create_task and wait
+                import concurrent.futures
+                with concurrent.futures.ThreadPoolExecutor() as executor:
+                    future = executor.submit(lambda: asyncio.run(_get_data()))
+                    positions, account, orders = future.result(timeout=30)
+            except RuntimeError:
+                # No event loop running, safe to use run_until_complete
+                positions, account, orders = asyncio.get_event_loop().run_until_complete(_get_data())
             
             return {
                 'positions': positions,
@@ -295,7 +314,16 @@ class IBKRPortfolioConnector:
         """Cleanup on destruction"""
         if self.connected:
             try:
-                asyncio.get_event_loop().run_until_complete(self.disconnect())
+                try:
+                    loop = asyncio.get_running_loop()
+                    # We're in a loop, use ThreadPoolExecutor
+                    import concurrent.futures
+                    with concurrent.futures.ThreadPoolExecutor() as executor:
+                        future = executor.submit(lambda: asyncio.run(self.disconnect()))
+                        future.result(timeout=5)
+                except RuntimeError:
+                    # No loop running
+                    asyncio.get_event_loop().run_until_complete(self.disconnect())
             except:
                 pass
 

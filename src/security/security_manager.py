@@ -1,6 +1,62 @@
 """
-Security Manager for KHAZAD_DUM Trading System
-Implements authentication, authorization, and additional security hardening
+██╗  ██╗██╗  ██╗ █████╗ ███████╗ █████╗ ██████╗       ██████╗ ██╗   ██╗███╗   ███╗
+██║ ██╔╝██║  ██║██╔══██╗╚══███╔╝██╔══██╗██╔══██╗      ██╔══██╗██║   ██║████╗ ████║
+█████╔╝ ███████║███████║  ███╔╝ ███████║██║  ██║█████╗██║  ██║██║   ██║██╔████╔██║
+██╔═██╗ ██╔══██║██╔══██║ ███╔╝  ██╔══██║██║  ██║╚════╝██║  ██║██║   ██║██║╚██╔╝██║
+██║  ██╗██║  ██║██║  ██║███████╗██║  ██║██████╔╝      ██████╔╝╚██████╔╝██║ ╚═╝ ██║
+╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝       ╚═════╝  ╚═════╝ ╚═╝     ╚═╝
+
+🏔️ ALGORITHMIC TRADING SYSTEM - "They delved too greedily and too deep..."
+
+┌─────────────────────────────────────────────────────────────────────────────────────┐
+│ 📋 MODULE: Security Management & Authentication                                │
+│ 📄 FILE: security_manager.py                                                   │
+│ 📅 CREATED: 2024-12-21                                                             │
+│ 👑 AUTHOR: FeanorKingofNoldor                                                      │
+│ 🔗 REPOSITORY: https://github.com/FeanorKingofNoldor/khazad_dum                   │
+│ 📧 CONTACT: [Your Contact Info]                                                    │
+│                                                                                     │
+│ 🎯 PURPOSE:                                                                        │
+│ Comprehensive security management with authentication & authorization              │
+│                                                                                     │
+│ 🔧 DEPENDENCIES:                                                                   │
+│ - hashlib & hmac (password hashing/comparison)                                    │
+│ - secrets (secure random generation)                                              │
+│ - SQLite (user & session management)                                              │
+│ - structured logging (security events)                                            │
+│                                                                                     │
+│ 📈 TRADING PIPELINE STAGE: Security Layer (All Stages)                          │
+│ └── 1. Market Regime Detection                                                     │
+│ └── 2. Stock Screening                                                             │
+│ └── 3. AI Analysis (TradingAgents)                                                 │
+│ └── 4. Pattern Recognition                                                         │
+│ └── 5. Portfolio Construction                                                      │
+│ └── 6. Performance Observation                                                     │
+│                                                                                     │
+│ ⚠️  CRITICAL NOTES:                                                                │
+│ - PBKDF2 password hashing with 100k iterations                                   │
+│ - Session management with timeout & IP tracking                                   │
+│ - Brute force protection with account lockout                                     │
+│ - Comprehensive security audit logging                                             │
+│                                                                                     │
+│ 📊 PERFORMANCE NOTES:                                                              │
+│ - Password hashing: ~100ms (intentionally slow)                                  │
+│ - Session validation: ~1-5ms                                                      │
+│ - Automatic session cleanup and timeouts                                          │
+│                                                                                     │
+│ 🧪 TESTING:                                                                        │
+│ - Unit Tests: tests/unit/test_security_manager.py                                 │
+│ - Security Tests: tests/security/test_authentication.py                          │
+│                                                                                     │
+│ 📚 DOCUMENTATION:                                                                  │
+│ - API Docs: Auto-generated from docstrings                                        │
+│ - Security Guide: docs/guides/SECURITY_MANAGEMENT.md                              │
+└─────────────────────────────────────────────────────────────────────────────────────┘
+
+Licensed under MIT License - See LICENSE file for details
+Copyright (c) 2024 FeanorKingofNoldor
+
+"In the depths of Khazad-dûm, the markets reveal their secrets to those who dare..."
 """
 
 import hashlib

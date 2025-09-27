@@ -1,6 +1,61 @@
 """
-Three-layer filtering system for KHAZAD_DUM
-Research-validated thresholds and regime-adaptive scoring
+██╗  ██╗██╗  ██╗ █████╗ ███████╗ █████╗ ██████╗       ██████╗ ██╗   ██╗███╗   ███╗
+██║ ██╔╝██║  ██║██╔══██╗╚══███╔╝██╔══██╗██╔══██╗      ██╔══██╗██║   ██║████╗ ████║
+█████╔╝ ███████║███████║  ███╔╝ ███████║██║  ██║█████╗██║  ██║██║   ██║██╔████╔██║
+██╔═██╗ ██╔══██║██╔══██║ ███╔╝  ██╔══██║██║  ██║╚════╝██║  ██║██║   ██║██║╚██╔╝██║
+██║  ██╗██║  ██║██║  ██║███████╗██║  ██║██████╔╝      ██████╔╝╚██████╔╝██║ ╚═╝ ██║
+╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝       ╚═════╝  ╚═════╝ ╚═╝     ╚═╝
+
+🏔️ ALGORITHMIC TRADING SYSTEM - "They delved too greedily and too deep..."
+
+┌─────────────────────────────────────────────────────────────────────────────────────┐
+│ 📋 MODULE: Three-Layer Stock Screening                                         │
+│ 📄 FILE: stock_filter.py                                                       │
+│ 📅 CREATED: 2024-12-21                                                             │
+│ 👑 AUTHOR: FeanorKingofNoldor                                                      │
+│ 🔗 REPOSITORY: https://github.com/FeanorKingofNoldor/khazad_dum                   │
+│ 📧 CONTACT: [Your Contact Info]                                                    │
+│                                                                                     │
+│ 🎯 PURPOSE:                                                                        │
+│ Research-validated three-layer filtering: hard constraints, regime scoring, selection │
+│                                                                                     │
+│ 🔧 DEPENDENCIES:                                                                   │
+│ - pandas (data manipulation)                                                       │
+│ - numpy (numeric operations)                                                       │
+│ - SQLite database (filter results storage)                                        │
+│ - regime-adaptive scoring algorithms                                               │
+│                                                                                     │
+│ 📈 TRADING PIPELINE STAGE: 2. Stock Screening                                   │
+│ └── 1. Market Regime Detection                                                     │
+│ └── 2. Stock Screening ← YOU ARE HERE                                           │
+│ └── 3. AI Analysis (TradingAgents)                                                 │
+│ └── 4. Pattern Recognition                                                         │
+│ └── 5. Portfolio Construction                                                      │
+│ └── 6. Performance Observation                                                     │
+│                                                                                     │
+│ ⚠️  CRITICAL NOTES:                                                                │
+│ - Reduces thousands of stocks to ~30 candidates                                   │
+│ - Regime-adaptive scoring: fear = mean reversion, greed = momentum                │
+│ - Includes exploration component to avoid overfitting                             │
+│                                                                                     │
+│ 📊 PERFORMANCE NOTES:                                                              │
+│ - Layer 1: Eliminates 80-95% of stocks instantly                                 │
+│ - Layer 2: Regime-based scoring in ~100ms                                        │
+│ - Layer 3: Final selection with exploration ratio                                │
+│                                                                                     │
+│ 🧪 TESTING:                                                                        │
+│ - Unit Tests: tests/unit/test_stock_filter.py                                     │
+│ - Integration Tests: tests/integration/test_stock_screening_integration.py        │
+│                                                                                     │
+│ 📚 DOCUMENTATION:                                                                  │
+│ - API Docs: Auto-generated from docstrings                                        │
+│ - Usage Guide: docs/guides/STOCK_SCREENING_USAGE.md                               │
+└─────────────────────────────────────────────────────────────────────────────────────┘
+
+Licensed under MIT License - See LICENSE file for details
+Copyright (c) 2024 FeanorKingofNoldor
+
+"In the depths of Khazad-dûm, the markets reveal their secrets to those who dare..."
 """
 
 import pandas as pd

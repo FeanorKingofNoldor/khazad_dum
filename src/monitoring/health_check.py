@@ -1,7 +1,62 @@
 #!/usr/bin/env python3
 """
-Health Check System for Khazad-dûm Trading Platform
-Provides comprehensive health monitoring for all system components
+██╗  ██╗██╗  ██╗ █████╗ ███████╗ █████╗ ██████╗       ██████╗ ██╗   ██╗███╗   ███╗
+██║ ██╔╝██║  ██║██╔══██╗╚══███╔╝██╔══██╗██╔══██╗      ██╔══██╗██║   ██║████╗ ████║
+█████╔╝ ███████║███████║  ███╔╝ ███████║██║  ██║█████╗██║  ██║██║   ██║██╔████╔██║
+██╔═██╗ ██╔══██║██╔══██║ ███╔╝  ██╔══██║██║  ██║╚════╝██║  ██║██║   ██║██║╚██╔╝██║
+██║  ██╗██║  ██║██║  ██║███████╗██║  ██║██████╔╝      ██████╔╝╚██████╔╝██║ ╚═╝ ██║
+╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝       ╚═════╝  ╚═════╝ ╚═╝     ╚═╝
+
+🏔️ ALGORITHMIC TRADING SYSTEM - "They delved too greedily and too deep..."
+
+┌─────────────────────────────────────────────────────────────────────────────────────┐
+│ 📋 MODULE: System Health Monitoring                                               │
+│ 📄 FILE: health_check.py                                                          │
+│ 📅 CREATED: 2024-12-21                                                             │
+│ 👑 AUTHOR: FeanorKingofNoldor                                                      │
+│ 🔗 REPOSITORY: https://github.com/FeanorKingofNoldor/khazad_dum                   │
+│ 📧 CONTACT: [Your Contact Info]                                                    │
+│                                                                                     │
+│ 🎯 PURPOSE:                                                                        │
+│ Comprehensive health monitoring for all trading system components                   │
+│                                                                                     │
+│ 🔧 DEPENDENCIES:                                                                   │
+│ - SQLite/PostgreSQL database                                                       │
+│ - Redis cache (optional)                                                           │
+│ - System resource monitoring                                                       │
+│ - API endpoint health checks                                                       │
+│                                                                                     │
+│ 📈 TRADING PIPELINE STAGE: System Monitoring (All Stages)                        │
+│ └── 1. Market Regime Detection                                                     │
+│ └── 2. Stock Screening                                                             │
+│ └── 3. AI Analysis (TradingAgents)                                                 │
+│ └── 4. Pattern Recognition                                                         │
+│ └── 5. Portfolio Construction                                                      │
+│ └── 6. Performance Observation                                                     │
+│                                                                                     │
+│ ⚠️  CRITICAL NOTES:                                                                │
+│ - Concurrent health checks for optimal performance                                 │
+│ - Graceful degradation when external services fail                                │
+│ - Detailed health status reporting                                                 │
+│                                                                                     │
+│ 📊 PERFORMANCE NOTES:                                                              │
+│ - Async health checks: ~500ms total response time                                 │
+│ - Individual checks timeout after 5 seconds                                       │
+│ - Memory and disk usage monitoring                                                 │
+│                                                                                     │
+│ 🧪 TESTING:                                                                        │
+│ - Unit Tests: tests/unit/test_health_check.py                                     │
+│ - Integration Tests: tests/integration/test_monitoring_integration.py             │
+│                                                                                     │
+│ 📚 DOCUMENTATION:                                                                  │
+│ - API Docs: Auto-generated from docstrings                                        │
+│ - Usage Guide: docs/guides/HEALTH_MONITORING_USAGE.md                             │
+└─────────────────────────────────────────────────────────────────────────────────────┘
+
+Licensed under MIT License - See LICENSE file for details
+Copyright (c) 2024 FeanorKingofNoldor
+
+"In the depths of Khazad-dûm, the markets reveal their secrets to those who dare..."
 """
 
 import time

@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-███████╗██╗  ██╗ █████╗ ███████╗ █████╗ ██████╗       ██████╗ ██╗   ██╗███╗   ███╗
-██╔════╝██║  ██║██╔══██╗╚══███╔╝██╔══██╗██╔══██╗      ██╔══██╗██║   ██║████╗ ████║
-██║     ███████║███████║  ███╔╝ ███████║██║  ██║█████╗██║  ██║██║   ██║██╔████╔██║
-██║     ██╔══██║██╔══██║ ███╔╝  ██╔══██║██║  ██║╚════╝██║  ██║██║   ██║██║╚██╔╝██║
-╚██████╗██║  ██║██║  ██║███████╗██║  ██║██████╔╝      ██████╔╝╚██████╔╝██║ ╚═╝ ██║
- ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝       ╚═════╝  ╚═════╝ ╚═╝     ╚═╝
+██╗  ██╗██╗  ██╗ █████╗ ███████╗ █████╗ ██████╗       ██████╗ ██╗   ██╗███╗   ███╗
+██║ ██╔╝██║  ██║██╔══██╗╚══███╔╝██╔══██╗██╔══██╗      ██╔══██╗██║   ██║████╗ ████║
+█████╔╝ ███████║███████║  ███╔╝ ███████║██║  ██║█████╗██║  ██║██║   ██║██╔████╔██║
+██╔═██╗ ██╔══██║██╔══██║ ███╔╝  ██╔══██║██║  ██║╚════╝██║  ██║██║   ██║██║╚██╔╝██║
+██║  ██╗██║  ██║██║  ██║███████╗██║  ██║██████╔╝      ██████╔╝╚██████╔╝██║ ╚═╝ ██║
+╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝       ╚═════╝  ╚═════╝ ╚═╝     ╚═╝
 
 🏔️ ALGORITHMIC TRADING SYSTEM - "They delved too greedily and too deep..."
 
@@ -170,7 +170,7 @@ def main() -> int:
         """
  /$$   /$$ /$$                                           /$$       /$$$$$$$                         
 | $$  /$$/| $$                                          | $$      | $$__  $$                        
-| $$ /$$/ | $$$$$$$   /$$$$$$  /$$$$$$$$  /$$$$$$   /$$$$$$$      | $$  \ $$ /$$   /$$ /$$$$$$/$$$$ 
+|| $$ /$$/ | $$$$$$$   /$$$$$$  /$$$$$$$$  /$$$$$$   /$$$$$$$      | $$  \\ $$ /$$   /$$ /$$$$$$/$$$$
 | $$$$$/  | $$__  $$ |____  $$|____ /$$/ |____  $$ /$$__  $$      | $$  | $$| $$  | $$| $$_  $$_  $$
 | $$  $$  | $$  \ $$  /$$$$$$$   /$$$$/   /$$$$$$$| $$  | $$      | $$  | $$| $$  | $$| $$ \ $$ \ $$
 | $$\  $$ | $$  | $$ /$$__  $$  /$$__/   /$$__  $$| $$  | $$      | $$  | $$| $$  | $$| $$ | $$ | $$
@@ -340,48 +340,14 @@ def main() -> int:
         except Exception as e:
             logger.error(f"Failed during TradingAgents analysis: {e}")
             return 1
-        # Generate batch ID for this run (original)
-        batch_id = f"batch_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
-
-        # Record filter decisions in observer (original)
-        for _, row in candidates.iterrows():
-            observer.record_pipeline_decision(
-                batch_id=batch_id,
-                symbol=row["symbol"],
-                stage="filter",
-                data={
-                    "passed": True,
-                    "score": row["score"],
-                    "layer": "final",
-                    "rsi_2": row["rsi_2"],
-                    "volume_ratio": row["volume_ratio"],
-                    "regime": regime["regime"],
-                },
-            )
-
-        # Step 4: Get portfolio context (original)
-        print("\n4. Getting Portfolio Context...")
-        portfolio_context = {
-            "cash_available": 100000,  # Replace with IBKR data
-            "total_positions": 0,
-            "unrealized_pnl_pct": 0,
-        }
-
-        # Step 5: Process through TradingAgents and Portfolio Constructor (original)
-        print("\n5. Running TradingAgents Analysis...")
-        result = batch_processor.process_batch(
-            candidates=candidates,
-            regime_data=regime,
-            portfolio_context=portfolio_context,
-        )
-        
-        # ADD: Note if patterns are enabled
-        if result.get("patterns_enabled"):
-            print("   ✓ Pattern-based feedback enabled")
 
         # Record TradingAgents decisions in observer
         try:
             if result.get("success"):
+                print(f"\n5. TradingAgents Analysis Complete")
+                print(f"   Batch ID: {result['batch_id']}")
+                print(f"   ✓ Analysis completed successfully")
+                
                 # Get the actual analysis results from database
                 analysis_results = database.conn.execute(
                     """
@@ -418,41 +384,6 @@ def main() -> int:
                     )
         except Exception as e:
             logger.warning(f"Failed to record pipeline decisions: {e}")
-        if result.get("success"):
-            # Get the actual analysis results from database
-            analysis_results = database.conn.execute(
-                """
-                SELECT symbol, decision, conviction_score
-                FROM tradingagents_analysis_results
-                WHERE batch_id = ?
-            """,
-                (result["batch_id"],),
-            ).fetchall()
-
-            for symbol, decision, conviction in analysis_results:
-                observer.record_pipeline_decision(
-                    batch_id=batch_id,
-                    symbol=symbol,
-                    stage="tradingagents",
-                    data={"decision": decision, "conviction": conviction},
-                )
-
-            # Record portfolio constructor selections (original)
-            for stock in result.get("selections", []):
-                observer.record_pipeline_decision(
-                    batch_id=batch_id,
-                    symbol=stock["symbol"],
-                    stage="portfolio_constructor",
-                    data={"selected": True},
-                )
-
-            for stock in result.get("excluded", []):
-                observer.record_pipeline_decision(
-                    batch_id=batch_id,
-                    symbol=stock["symbol"],
-                    stage="portfolio_constructor",
-                    data={"selected": False},
-                )
 
         # Display results
         print(f"\n{'='*60}")
