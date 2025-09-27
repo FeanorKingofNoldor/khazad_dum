@@ -1,0 +1,422 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.core.pattern_recognition.pattern_tracker &mdash; KHAZAD_DUM Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/khazad_dum_custom.css" />
+
+  
+    <link rel="canonical" href="https://github.com/FeanorKingofNoldor/khazad_dum_modules/src/core/pattern_recognition/pattern_tracker.html"/>
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2c3e50" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            KHAZAD_DUM
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../generated/src.core.html">src.core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../generated/src.data_pipeline.html">src.data_pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../generated/src.trading_engines.html">src.trading_engines</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2c3e50" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">KHAZAD_DUM</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">src.core.pattern_recognition.pattern_tracker</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for src.core.pattern_recognition.pattern_tracker</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Pattern Performance Tracker</span>
+<span class="sd">Tracks and updates pattern performance in real-time</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">config.settings.base_config</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">PATTERN_MIN_TRADES_FOR_ANALYSIS</span><span class="p">,</span>
+    <span class="n">PATTERN_LOOKBACK_DAYS</span><span class="p">,</span>
+    <span class="n">PATTERN_STOP_MULTIPLIERS</span><span class="p">,</span>
+    <span class="n">PATTERN_POSITION_SIZE_MULTIPLIERS</span><span class="p">,</span>
+    <span class="n">PATTERN_CACHE_TIMEOUT</span><span class="p">,</span>
+    <span class="n">PATTERN_CACHE_CLEAN_INTERVAL</span><span class="p">,</span>
+    <span class="n">PATTERN_BREAKDOWN_MIN_TRADES</span><span class="p">,</span>
+    <span class="n">PATTERN_BREAKDOWN_WIN_RATE</span><span class="p">,</span>
+    <span class="n">PATTERN_HOT_MIN_TRADES</span><span class="p">,</span>
+    <span class="n">PATTERN_HOT_WIN_RATE</span><span class="p">,</span>
+    <span class="n">PATTERN_HOT_RECENT_WIN</span><span class="p">,</span>
+    <span class="n">PATTERN_HOT_MOMENTUM</span><span class="p">,</span>
+    <span class="n">PATTERN_COLD_RECENT_WIN</span><span class="p">,</span>
+    <span class="n">PATTERN_GOOD_EXPECTANCY</span><span class="p">,</span>
+    <span class="n">PATTERN_BAD_EXPECTANCY</span><span class="p">,</span>
+    <span class="n">PATTERN_MOMENTUM_STRONG_UP</span><span class="p">,</span>
+    <span class="n">PATTERN_MOMENTUM_UP</span><span class="p">,</span>
+    <span class="n">PATTERN_MOMENTUM_STRONG_DOWN</span><span class="p">,</span>
+    <span class="n">PATTERN_MOMENTUM_DOWN</span>
+<span class="p">)</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="PatternTracker">
+<a class="viewcode-back" href="../../../../index.html#src.core.pattern_recognition.pattern_tracker.PatternTracker">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PatternTracker</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Tracks pattern performance and provides real-time statistics</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern_db</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            pattern_db: PatternDatabase instance</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">db</span> <span class="o">=</span> <span class="n">pattern_db</span>
+        
+        <span class="c1"># Cache for frequently accessed patterns</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cache_timeout</span> <span class="o">=</span> <span class="n">PATTERN_CACHE_TIMEOUT</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_last_cache_clear</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+    
+<div class="viewcode-block" id="PatternTracker.track_entry">
+<a class="viewcode-back" href="../../../../index.html#src.core.pattern_recognition.pattern_tracker.PatternTracker.track_entry">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">track_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">entry_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Track when a trade enters based on a pattern</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            pattern_id: Pattern being traded</span>
+<span class="sd">            entry_data: Entry information including symbol, price, indicators</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Success boolean</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Record in pattern history</span>
+            <span class="n">trade_data</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;batch_id&#39;</span><span class="p">:</span> <span class="n">entry_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;batch_id&#39;</span><span class="p">),</span>
+                <span class="s1">&#39;symbol&#39;</span><span class="p">:</span> <span class="n">entry_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;symbol&#39;</span><span class="p">),</span>
+                <span class="s1">&#39;entry_date&#39;</span><span class="p">:</span> <span class="n">entry_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;entry_date&#39;</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">()),</span>
+                <span class="s1">&#39;entry_price&#39;</span><span class="p">:</span> <span class="n">entry_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;entry_price&#39;</span><span class="p">),</span>
+                <span class="s1">&#39;rsi&#39;</span><span class="p">:</span> <span class="n">entry_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;rsi_2&#39;</span><span class="p">),</span>
+                <span class="s1">&#39;volume_ratio&#39;</span><span class="p">:</span> <span class="n">entry_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;volume_ratio&#39;</span><span class="p">),</span>
+                <span class="s1">&#39;atr&#39;</span><span class="p">:</span> <span class="n">entry_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;atr&#39;</span><span class="p">),</span>
+                <span class="s1">&#39;vix&#39;</span><span class="p">:</span> <span class="n">entry_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;vix&#39;</span><span class="p">),</span>
+                <span class="s1">&#39;fear_greed&#39;</span><span class="p">:</span> <span class="n">entry_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;fear_greed_value&#39;</span><span class="p">),</span>
+                <span class="s1">&#39;decision&#39;</span><span class="p">:</span> <span class="n">entry_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;decision&#39;</span><span class="p">,</span> <span class="s1">&#39;BUY&#39;</span><span class="p">),</span>
+                <span class="s1">&#39;conviction&#39;</span><span class="p">:</span> <span class="n">entry_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;conviction_score&#39;</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
+                <span class="s1">&#39;position_size_pct&#39;</span><span class="p">:</span> <span class="n">entry_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;position_size_pct&#39;</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">)</span>
+            <span class="p">}</span>
+            
+            <span class="n">success</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">record_pattern_trade</span><span class="p">(</span><span class="n">pattern_id</span><span class="p">,</span> <span class="n">trade_data</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">success</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Tracking entry for pattern </span><span class="si">{</span><span class="n">pattern_id</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">entry_data</span><span class="p">[</span><span class="s1">&#39;symbol&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_invalidate_cache</span><span class="p">(</span><span class="n">pattern_id</span><span class="p">)</span>
+            
+            <span class="k">return</span> <span class="n">success</span>
+            
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to track entry: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+    
+<div class="viewcode-block" id="PatternTracker.track_exit">
+<a class="viewcode-back" href="../../../../index.html#src.core.pattern_recognition.pattern_tracker.PatternTracker.track_exit">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">track_exit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">exit_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Track when a pattern-based trade exits</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            pattern_id: Pattern that was traded</span>
+<span class="sd">            exit_data: Exit information including pnl, holding period</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Success boolean</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Update pattern history</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">update_pattern_trade_exit</span><span class="p">(</span>
+                <span class="n">exit_data</span><span class="p">[</span><span class="s1">&#39;batch_id&#39;</span><span class="p">],</span>
+                <span class="n">exit_data</span><span class="p">[</span><span class="s1">&#39;symbol&#39;</span><span class="p">],</span>
+                <span class="n">exit_data</span>
+            <span class="p">)</span>
+            
+            <span class="c1"># Update pattern performance</span>
+            <span class="n">trade_result</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;pnl_percent&#39;</span><span class="p">:</span> <span class="n">exit_data</span><span class="p">[</span><span class="s1">&#39;pnl_percent&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;holding_days&#39;</span><span class="p">:</span> <span class="n">exit_data</span><span class="p">[</span><span class="s1">&#39;holding_days&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;max_gain_percent&#39;</span><span class="p">:</span> <span class="n">exit_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;max_gain_percent&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                <span class="s1">&#39;max_drawdown_percent&#39;</span><span class="p">:</span> <span class="n">exit_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;max_drawdown_percent&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="p">}</span>
+            
+            <span class="n">success</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">update_pattern_performance</span><span class="p">(</span><span class="n">pattern_id</span><span class="p">,</span> <span class="n">trade_result</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">success</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pattern </span><span class="si">{</span><span class="n">pattern_id</span><span class="si">}</span><span class="s2"> trade closed: </span><span class="si">{</span><span class="n">exit_data</span><span class="p">[</span><span class="s1">&#39;pnl_percent&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_invalidate_cache</span><span class="p">(</span><span class="n">pattern_id</span><span class="p">)</span>
+                
+                <span class="c1"># Check for significant events</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_check_pattern_alerts</span><span class="p">(</span><span class="n">pattern_id</span><span class="p">)</span>
+            
+            <span class="k">return</span> <span class="n">success</span>
+            
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to track exit: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+    
+<div class="viewcode-block" id="PatternTracker.get_pattern_context">
+<a class="viewcode-back" href="../../../../index.html#src.core.pattern_recognition.pattern_tracker.PatternTracker.get_pattern_context">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_pattern_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get current pattern context for decision making</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            pattern_id: Pattern to get context for</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Dict with pattern statistics and recommendations</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check cache first</span>
+        <span class="k">if</span> <span class="n">pattern_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">:</span>
+            <span class="n">cached_data</span><span class="p">,</span> <span class="n">timestamp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">[</span><span class="n">pattern_id</span><span class="p">]</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">timestamp</span><span class="p">)</span><span class="o">.</span><span class="n">seconds</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache_timeout</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">cached_data</span>
+        
+        <span class="c1"># Get fresh data</span>
+        <span class="n">stats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">get_pattern_stats</span><span class="p">(</span><span class="n">pattern_id</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">stats</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s1">&#39;pattern_id&#39;</span><span class="p">:</span> <span class="n">pattern_id</span><span class="p">,</span>
+                <span class="s1">&#39;exists&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s1">&#39;recommendation&#39;</span><span class="p">:</span> <span class="s1">&#39;No historical data for this pattern&#39;</span>
+            <span class="p">}</span>
+        
+        <span class="c1"># Build context</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;pattern_id&#39;</span><span class="p">:</span> <span class="n">pattern_id</span><span class="p">,</span>
+            <span class="s1">&#39;exists&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s1">&#39;total_trades&#39;</span><span class="p">:</span> <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;total_trades&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;win_rate&#39;</span><span class="p">:</span> <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;win_rate&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;recent_win_rate&#39;</span><span class="p">:</span> <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;recent_win_rate&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;expectancy&#39;</span><span class="p">:</span> <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;expectancy&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;confidence&#39;</span><span class="p">:</span> <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;confidence_level&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;momentum&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_describe_momentum</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;momentum_score&#39;</span><span class="p">]),</span>
+            <span class="s1">&#39;recent_trades&#39;</span><span class="p">:</span> <span class="n">stats</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;recent_trades&#39;</span><span class="p">,</span> <span class="p">[])[</span><span class="o">-</span><span class="mi">5</span><span class="p">:],</span>  <span class="c1"># Last 5</span>
+            <span class="s1">&#39;recommendation&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_recommendation</span><span class="p">(</span><span class="n">stats</span><span class="p">)</span>
+        <span class="p">}</span>
+        
+        <span class="c1"># Cache the result</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">[</span><span class="n">pattern_id</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clean_cache</span><span class="p">()</span>
+        
+        <span class="k">return</span> <span class="n">context</span></div>
+
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_generate_recommendation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stats</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate actionable recommendation based on pattern stats&quot;&quot;&quot;</span>
+        
+        <span class="k">if</span> <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;confidence_level&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;low&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Low confidence - only </span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;total_trades&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> trades. Use standard position sizing.&quot;</span>
+        
+        <span class="k">if</span> <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;recent_win_rate&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">PATTERN_HOT_RECENT_WIN</span> <span class="ow">and</span> <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;momentum_score&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">PATTERN_HOT_MOMENTUM</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;HOT pattern - </span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;recent_win_rate&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.0%</span><span class="si">}</span><span class="s2"> recent win rate. Consider larger position.&quot;</span>
+
+        <span class="k">if</span> <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;recent_win_rate&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">PATTERN_COLD_RECENT_WIN</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;COLD pattern - only </span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;recent_win_rate&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.0%</span><span class="si">}</span><span class="s2"> recent wins. Reduce size or skip.&quot;</span>
+
+        <span class="k">if</span> <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;expectancy&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">PATTERN_GOOD_EXPECTANCY</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Profitable pattern - </span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;expectancy&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="s2"> expected value. Proceed with confidence.&quot;</span>
+
+        <span class="k">if</span> <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;expectancy&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">PATTERN_BAD_EXPECTANCY</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Losing pattern - </span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;expectancy&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="s2"> expected loss. Consider avoiding.&quot;</span>
+        
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Neutral pattern - </span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;win_rate&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.0%</span><span class="si">}</span><span class="s2"> win rate. Use standard approach.&quot;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_describe_momentum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">momentum_score</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert momentum score to description&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">momentum_score</span> <span class="o">&gt;</span> <span class="n">PATTERN_MOMENTUM_STRONG_UP</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;strongly_improving&#39;</span>
+        <span class="k">elif</span> <span class="n">momentum_score</span> <span class="o">&gt;</span> <span class="n">PATTERN_MOMENTUM_UP</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;improving&#39;</span>
+        <span class="k">elif</span> <span class="n">momentum_score</span> <span class="o">&lt;</span> <span class="n">PATTERN_MOMENTUM_STRONG_DOWN</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;strongly_declining&#39;</span>
+        <span class="k">elif</span> <span class="n">momentum_score</span> <span class="o">&lt;</span> <span class="n">PATTERN_MOMENTUM_DOWN</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;declining&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;stable&#39;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_check_pattern_alerts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if pattern performance warrants an alert&quot;&quot;&quot;</span>
+        <span class="n">stats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">get_pattern_stats</span><span class="p">(</span><span class="n">pattern_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">stats</span><span class="p">:</span>
+            <span class="k">return</span>
+        
+        <span class="k">if</span> <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;total_trades&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">PATTERN_BREAKDOWN_MIN_TRADES</span> <span class="ow">and</span> <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;recent_win_rate&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">PATTERN_BREAKDOWN_WIN_RATE</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;PATTERN BREAKDOWN: </span><span class="si">{</span><span class="n">pattern_id</span><span class="si">}</span><span class="s2"> win rate collapsed to </span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;recent_win_rate&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.0%</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;total_trades&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">PATTERN_HOT_MIN_TRADES</span> <span class="ow">and</span> <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;recent_win_rate&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">PATTERN_HOT_WIN_RATE</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;HOT PATTERN: </span><span class="si">{</span><span class="n">pattern_id</span><span class="si">}</span><span class="s2"> showing </span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;recent_win_rate&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.0%</span><span class="si">}</span><span class="s2"> recent wins&quot;</span><span class="p">)</span>
+    
+<div class="viewcode-block" id="PatternTracker.get_pattern_report">
+<a class="viewcode-back" href="../../../../index.html#src.core.pattern_recognition.pattern_tracker.PatternTracker.get_pattern_report">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_pattern_report</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">regime</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate comprehensive pattern performance report</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            regime: Optional regime filter</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Dict with pattern analysis</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">report</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;timestamp&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
+            <span class="s1">&#39;summary&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">get_pattern_summary_stats</span><span class="p">(),</span>
+            <span class="s1">&#39;top_patterns&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">get_top_patterns</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span>
+            <span class="s1">&#39;breaking_patterns&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">get_breaking_patterns</span><span class="p">(),</span>
+            <span class="s1">&#39;hot_patterns&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">get_hot_patterns</span><span class="p">(),</span>
+            <span class="s1">&#39;regime_analysis&#39;</span><span class="p">:</span> <span class="p">{}</span>
+        <span class="p">}</span>
+        
+        <span class="c1"># Add regime-specific analysis if requested</span>
+        <span class="k">if</span> <span class="n">regime</span><span class="p">:</span>
+            <span class="n">report</span><span class="p">[</span><span class="s1">&#39;regime_analysis&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;regime&#39;</span><span class="p">:</span> <span class="n">regime</span><span class="p">,</span>
+                <span class="s1">&#39;patterns&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">get_regime_patterns</span><span class="p">(</span><span class="n">regime</span><span class="p">),</span>
+                <span class="s1">&#39;best_strategy&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_best_strategy_for_regime</span><span class="p">(</span><span class="n">regime</span><span class="p">)</span>
+            <span class="p">}</span>
+        
+        <span class="k">return</span> <span class="n">report</span></div>
+
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_find_best_strategy_for_regime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">regime</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Find best performing strategy type for a regime&quot;&quot;&quot;</span>
+        <span class="n">patterns</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">get_regime_patterns</span><span class="p">(</span><span class="n">regime</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">patterns</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="s1">&#39;No patterns for this regime&#39;</span><span class="p">}</span>
+        
+        <span class="c1"># Group by strategy</span>
+        <span class="n">strategies</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">patterns</span><span class="p">:</span>
+            <span class="n">strategy</span> <span class="o">=</span> <span class="n">pattern</span><span class="p">[</span><span class="s1">&#39;strategy_type&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">strategy</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">strategies</span><span class="p">:</span>
+                <span class="n">strategies</span><span class="p">[</span><span class="n">strategy</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s1">&#39;count&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                    <span class="s1">&#39;total_expectancy&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                    <span class="s1">&#39;total_win_rate&#39;</span><span class="p">:</span> <span class="mi">0</span>
+                <span class="p">}</span>
+            
+            <span class="n">strategies</span><span class="p">[</span><span class="n">strategy</span><span class="p">][</span><span class="s1">&#39;count&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">strategies</span><span class="p">[</span><span class="n">strategy</span><span class="p">][</span><span class="s1">&#39;total_expectancy&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">pattern</span><span class="p">[</span><span class="s1">&#39;expectancy&#39;</span><span class="p">]</span>
+            <span class="n">strategies</span><span class="p">[</span><span class="n">strategy</span><span class="p">][</span><span class="s1">&#39;total_win_rate&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">pattern</span><span class="p">[</span><span class="s1">&#39;win_rate&#39;</span><span class="p">]</span>
+        
+        <span class="c1"># Find best</span>
+        <span class="n">best_strategy</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">best_expectancy</span> <span class="o">=</span> <span class="o">-</span><span class="mi">999</span>
+        
+        <span class="k">for</span> <span class="n">strategy</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">strategies</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">avg_expectancy</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;total_expectancy&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">avg_expectancy</span> <span class="o">&gt;</span> <span class="n">best_expectancy</span><span class="p">:</span>
+                <span class="n">best_expectancy</span> <span class="o">=</span> <span class="n">avg_expectancy</span>
+                <span class="n">best_strategy</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s1">&#39;strategy&#39;</span><span class="p">:</span> <span class="n">strategy</span><span class="p">,</span>
+                    <span class="s1">&#39;avg_expectancy&#39;</span><span class="p">:</span> <span class="n">avg_expectancy</span><span class="p">,</span>
+                    <span class="s1">&#39;avg_win_rate&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;total_win_rate&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">],</span>
+                    <span class="s1">&#39;pattern_count&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span>
+                <span class="p">}</span>
+        
+        <span class="k">return</span> <span class="n">best_strategy</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_invalidate_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove pattern from cache when updated&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">pattern_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">:</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">[</span><span class="n">pattern_id</span><span class="p">]</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_clean_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Periodically clean old cache entries&quot;&quot;&quot;</span>
+        <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">now</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_cache_clear</span><span class="p">)</span><span class="o">.</span><span class="n">seconds</span> <span class="o">&gt;</span> <span class="n">PATTERN_CACHE_CLEAN_INTERVAL</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_last_cache_clear</span> <span class="o">=</span> <span class="n">now</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, FeanorKingofNoldor.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

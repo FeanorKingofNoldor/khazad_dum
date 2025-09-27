@@ -1,0 +1,83 @@
+# ==============================================================================
+# KHAZAD-DÛM PROMETHEUS CONFIGURATION
+# Metrics collection for trading system monitoring
+# ==============================================================================
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    monitor: 'khazad-dum-trading'
+    environment: 'production'
+
+rule_files:
+  - "alert_rules.yml"
+
+scrape_configs:
+  # Prometheus self-monitoring
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+    scrape_interval: 30s
+    metrics_path: /metrics
+
+  # Main trading engine
+  - job_name: 'khazad-trading-engine'
+    static_configs:
+      - targets: ['trading-engine:8000']
+    scrape_interval: 10s
+    metrics_path: /metrics
+    scrape_timeout: 5s
+
+  # Monitoring dashboard
+  - job_name: 'khazad-monitor'
+    static_configs:
+      - targets: ['monitor-dashboard:8001']
+    scrape_interval: 15s
+    metrics_path: /metrics
+
+  # PostgreSQL metrics (if using postgres_exporter)
+  - job_name: 'khazad-database'
+    static_configs:
+      - targets: ['database:5432']
+    scrape_interval: 30s
+    metrics_path: /metrics
+    params:
+      collect[]:
+        - 'pg_stat_database'
+        - 'pg_stat_user_tables'
+
+  # Redis metrics (if using redis_exporter)
+  - job_name: 'khazad-redis'
+    static_configs:
+      - targets: ['redis:6379']
+    scrape_interval: 15s
+    metrics_path: /metrics
+
+  # Nginx metrics (if using nginx_exporter)
+  - job_name: 'khazad-nginx'
+    static_configs:
+      - targets: ['nginx:80']
+    scrape_interval: 30s
+    metrics_path: /metrics
+
+  # System metrics for container health
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']
+    scrape_interval: 15s
+
+  # Custom application metrics from health checks
+  - job_name: 'khazad-health'
+    static_configs:
+      - targets: ['trading-engine:8000']
+    scrape_interval: 30s
+    metrics_path: /health/metrics
+    scrape_timeout: 10s
+
+# Alertmanager configuration (optional)
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          - alertmanager:9093

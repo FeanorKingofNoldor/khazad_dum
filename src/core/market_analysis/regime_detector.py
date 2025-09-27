@@ -1,7 +1,65 @@
+#!/usr/bin/env python3
 """
-Market Regime Detection using CNN Fear & Greed Index
-Using custom scraper for Python 3.13 compatibility
+███████╗██╗  ██╗ █████╗ ███████╗ █████╗ ██████╗       ██████╗ ██╗   ██╗███╗   ███╗
+██╔════╝██║  ██║██╔══██╗╚══███╔╝██╔══██╗██╔══██╗      ██╔══██╗██║   ██║████╗ ████║
+██║     ███████║███████║  ███╔╝ ███████║██║  ██║█████╗██║  ██║██║   ██║██╔████╔██║
+██║     ██╔══██║██╔══██║ ███╔╝  ██╔══██║██║  ██║╚════╝██║  ██║██║   ██║██║╚██╔╝██║
+╚██████╗██║  ██║██║  ██║███████╗██║  ██║██████╔╝      ██████╔╝╚██████╔╝██║ ╚═╝ ██║
+ ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝       ╚═════╝  ╚═════╝ ╚═╝     ╚═╝
+
+🏔️ ALGORITHMIC TRADING SYSTEM - "They delved too greedily and too deep..."
+
+┌─────────────────────────────────────────────────────────────────────────────────────┐
+│ 📋 MODULE: Market Regime Detection                                              │
+│ 📄 FILE: regime_detector.py                                                     │
+│ 📅 CREATED: 2024-12-21                                                             │
+│ 👑 AUTHOR: FeanorKingofNoldor                                                      │
+│ 🔗 REPOSITORY: https://github.com/FeanorKingofNoldor/khazad_dum                   │
+│ 📧 CONTACT: [Your Contact Info]                                                    │
+│                                                                                     │
+│ 🎯 PURPOSE:                                                                        │
+│ Stage 1: Classify market conditions using CNN Fear & Greed Index + VIX            │
+│                                                                                     │
+│ 🔧 DEPENDENCIES:                                                                   │
+│ - CNN Fear & Greed Index API                                                       │
+│ - Yahoo Finance (VIX data)                                                         │
+│ - Custom CNN scraper (Python 3.13 compatibility)                                 │
+│                                                                                     │
+│ 📈 TRADING PIPELINE STAGE: 1. Market Regime Detection                           │
+│ └── 1. Market Regime Detection ← YOU ARE HERE                                    │
+│ └── 2. Stock Screening                                                             │
+│ └── 3. AI Analysis (TradingAgents)                                                 │
+│ └── 4. Pattern Recognition                                                         │
+│ └── 5. Portfolio Construction                                                      │
+│ └── 6. Performance Observation                                                     │
+│                                                                                     │
+│ ⚠️  CRITICAL NOTES:                                                                │
+│ - Fallbacks to VIX-only regime when CNN feed fails                                │
+│ - 300s cache duration to minimize API calls                                       │
+│ - Extreme Fear = 1.5x positions, Extreme Greed = 0.5x positions                  │
+│                                                                                     │
+│ 📊 PERFORMANCE NOTES:                                                              │
+│ - Cached regime calls: ~1ms response time                                         │
+│ - Fresh regime calls: ~500ms (network dependent)                                  │
+│ - VIX fallback: ~200ms                                                             │
+│                                                                                     │
+│ 🧪 TESTING:                                                                        │
+│ - Unit Tests: tests/unit/test_regime_detector.py                                  │
+│ - Integration Tests: tests/integration/test_market_analysis_integration.py        │
+│                                                                                     │
+│ 📚 DOCUMENTATION:                                                                  │
+│ - API Docs: Auto-generated from docstrings                                        │
+│ - Usage Guide: docs/guides/MARKET_REGIME_USAGE.md                                 │
+└─────────────────────────────────────────────────────────────────────────────────────┘
+
+Licensed under MIT License - See LICENSE file for details
+Copyright (c) 2024 FeanorKingofNoldor
+
+"In the depths of Khazad-dûm, the markets reveal their secrets to those who dare..."
 """
+
+# Market Regime Detection using CNN Fear & Greed Index
+# Using custom scraper for Python 3.13 compatibility
 
 import time
 import json

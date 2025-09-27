@@ -1,0 +1,56 @@
+# ==============================================================================
+# KHAZAD-DÛM WEB DASHBOARD - PRODUCTION DOCKERFILE  
+# Mobile-friendly web monitoring interface
+# ==============================================================================
+
+FROM python:3.13-slim
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
+
+# Create non-root user
+RUN useradd --create-home --shell /bin/bash --uid 1002 webdash
+WORKDIR /app
+
+# Install Python dependencies for web dashboard
+RUN pip install --no-cache-dir \
+    fastapi \
+    uvicorn[standard] \
+    jinja2 \
+    python-multipart \
+    websockets \
+    psycopg2-binary \
+    redis \
+    pandas \
+    requests
+
+# Copy web dashboard modules
+COPY --chown=webdash:webdash src/web_dashboard/ ./src/web_dashboard/
+COPY --chown=webdash:webdash src/monitoring/ ./src/monitoring/
+COPY --chown=webdash:webdash src/data_pipeline/ ./src/data_pipeline/
+COPY --chown=webdash:webdash config/ ./config/
+
+# Create necessary directories
+RUN mkdir -p /app/logs \
+    && chown -R webdash:webdash /app
+
+# Switch to non-root user
+USER webdash
+
+# Environment variables
+ENV PYTHONPATH=/app
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+# Expose port
+EXPOSE 8002
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+    CMD curl -f http://localhost:8002/api/health || exit 1
+
+# Default command
+CMD ["python", "-m", "src.web_dashboard.app"]

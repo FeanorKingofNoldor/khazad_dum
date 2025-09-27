@@ -27,9 +27,16 @@ class PatternMemoryInjector:
         self.memories = memory_systems
         self.db = pattern_db
 
-        # Track what we've injected to avoid duplicates
-        self._injection_history = []
-        self._max_history = 100
+        # Track what we've injected to avoid duplicates - use set for O(1) lookups
+        # and rotating deque for memory efficiency
+        from collections import deque
+        self._injection_history = set()  # For fast lookups
+        self._injection_order = deque(maxlen=500)  # Circular buffer for order tracking
+        self._max_history = 500  # Increased for better duplicate detection
+        
+        # Track memory usage for cleanup
+        self._memory_usage_bytes = 0
+        self._cleanup_threshold = 10 * 1024 * 1024  # 10MB trigger for cleanup
 
     def format_pattern_as_memory(self, pattern_data: Dict) -> Tuple[str, str]:
         """
@@ -325,14 +332,33 @@ Monitor pattern performance closely for next 5-10 trades."""
         )
 
     def _was_recently_injected(self, pattern_id: str) -> bool:
-        """Check if pattern was recently injected to avoid duplicates"""
+        """Check if pattern was recently injected to avoid duplicates (O(1) lookup)"""
         return pattern_id in self._injection_history
 
     def _record_injection(self, pattern_id: str):
-        """Track injection to prevent duplicates"""
-        self._injection_history.append(pattern_id)
-        if len(self._injection_history) > self._max_history:
-            self._injection_history = self._injection_history[-self._max_history :]
+        """Track injection to prevent duplicates with memory-efficient circular buffer"""
+        # If we already have this pattern, don't add again
+        if pattern_id in self._injection_history:
+            return
+        
+        # Add to both tracking structures
+        self._injection_history.add(pattern_id)
+        self._injection_order.append(pattern_id)
+        
+        # Clean up old entries when deque rotates
+        if len(self._injection_order) == self._injection_order.maxlen:
+            # When deque is full, the oldest item will be dropped
+            # We need to remove it from the set as well
+            if len(self._injection_history) > self._max_history:
+                # Remove oldest entries from set to prevent unlimited growth
+                old_entries = list(self._injection_order)[:100]  # Remove oldest 100
+                for old_entry in old_entries:
+                    self._injection_history.discard(old_entry)
+        
+        # Periodic cleanup if memory usage is high
+        self._memory_usage_bytes += len(pattern_id.encode('utf-8'))
+        if self._memory_usage_bytes > self._cleanup_threshold:
+            self._cleanup_injection_history()
 
     def _log_learning_event(self, patterns: List[Dict], injection_type: str):
         """Log learning event to database"""
@@ -537,3 +563,49 @@ Monitor pattern performance closely for next 5-10 trades."""
                 logger.warning(f"Failed to inject to {memory_name}: {e}")
         
         return len(memories_to_inject)
+    
+    def _cleanup_injection_history(self):
+        """Clean up injection history to prevent memory leaks"""
+        try:
+            # Keep only the most recent entries (half of max)
+            keep_size = self._max_history // 2
+            if len(self._injection_history) > keep_size:
+                # Get most recent entries from deque
+                recent_entries = list(self._injection_order)[-keep_size:]
+                
+                # Clear and rebuild set with only recent entries
+                self._injection_history.clear()
+                self._injection_history.update(recent_entries)
+                
+                # Reset memory counter
+                self._memory_usage_bytes = sum(
+                    len(entry.encode('utf-8')) for entry in self._injection_history
+                )
+                
+                logger.info(f"Cleaned injection history: kept {len(self._injection_history)} recent entries")
+        except Exception as e:
+            logger.warning(f"Error during injection history cleanup: {e}")
+    
+    def cleanup(self):
+        """Manual cleanup method for resource management"""
+        self._injection_history.clear()
+        self._injection_order.clear()
+        self._memory_usage_bytes = 0
+        logger.info("PatternMemoryInjector resources cleaned up")
+    
+    def __enter__(self):
+        """Context manager entry"""
+        return self
+    
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        """Context manager exit with cleanup"""
+        self.cleanup()
+        
+    def get_memory_stats(self) -> Dict:
+        """Get current memory usage statistics"""
+        return {
+            'injection_history_size': len(self._injection_history),
+            'injection_order_size': len(self._injection_order),
+            'estimated_memory_bytes': self._memory_usage_bytes,
+            'max_history_limit': self._max_history
+        }

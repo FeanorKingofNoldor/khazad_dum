@@ -1,0 +1,128 @@
+# ==============================================================================
+# KHAZAD-DÛM TRADING SYSTEM - AUTOMATED MAINTENANCE CRONTAB
+# Production maintenance schedule
+# ==============================================================================
+
+# Environment variables for cron jobs
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+MAILTO=""  # Set to your email for notifications
+
+# Project directory (update this to your actual path)
+PROJECT_DIR=/home/feanor/khazad_dum
+
+# ==============================================================================
+# BACKUP SCHEDULE
+# ==============================================================================
+
+# Daily database backup at 2:00 AM
+0 2 * * * cd $PROJECT_DIR && ./scripts/maintenance.sh backup >> logs/cron.log 2>&1
+
+# Weekly full backup on Sunday at 1:00 AM
+0 1 * * 0 cd $PROJECT_DIR && ./scripts/maintenance.sh full >> logs/cron.log 2>&1
+
+# ==============================================================================
+# LOG ROTATION AND CLEANUP
+# ==============================================================================
+
+# Daily log rotation at 3:00 AM
+0 3 * * * cd $PROJECT_DIR && ./scripts/maintenance.sh cleanup >> logs/cron.log 2>&1
+
+# Weekly Docker cleanup on Sunday at 4:00 AM
+0 4 * * 0 cd $PROJECT_DIR && docker system prune -f >> logs/cron.log 2>&1
+
+# ==============================================================================
+# HEALTH CHECKS
+# ==============================================================================
+
+# Health check every 15 minutes during market hours (9:30 AM - 4:00 PM EST)
+*/15 9-16 * * 1-5 cd $PROJECT_DIR && ./scripts/maintenance.sh health >> logs/health.log 2>&1 || echo "Health check failed at $(date)" >> logs/alerts.log
+
+# Comprehensive health check every hour
+0 * * * * cd $PROJECT_DIR && curl -s http://localhost:8000/health > /dev/null || echo "Trading engine health check failed at $(date)" >> logs/alerts.log
+
+# ==============================================================================
+# SSL CERTIFICATE MANAGEMENT
+# ==============================================================================
+
+# Check SSL certificates daily at 5:00 AM
+0 5 * * * cd $PROJECT_DIR && openssl x509 -checkend 604800 -noout -in deploy/ssl/fullchain.pem || echo "SSL certificate expiring soon - $(date)" >> logs/alerts.log
+
+# Attempt SSL renewal weekly on Monday at 6:00 AM
+0 6 * * 1 cd $PROJECT_DIR && if command -v certbot >/dev/null; then certbot renew --quiet && make ssl-renew; fi >> logs/ssl.log 2>&1
+
+# ==============================================================================
+# DATABASE MAINTENANCE
+# ==============================================================================
+
+# Database optimization every Sunday at 5:00 AM
+0 5 * * 0 cd $PROJECT_DIR && docker compose exec -T database psql -U khazad_user -d khazad_dum -c "VACUUM ANALYZE;" >> logs/db_maintenance.log 2>&1
+
+# Update database statistics daily at 6:00 AM
+0 6 * * * cd $PROJECT_DIR && docker compose exec -T database psql -U khazad_user -d khazad_dum -c "ANALYZE;" >> logs/db_maintenance.log 2>&1
+
+# ==============================================================================
+# TRADING SYSTEM SPECIFIC
+# ==============================================================================
+
+# Weekly pattern analysis on Sunday at 7:00 PM (market closed)
+0 19 * * 0 cd $PROJECT_DIR && docker compose exec -T trading-engine python -c "from src.core.pattern_recognition.pattern_tracker import PatternTracker; PatternTracker().run_weekly_analysis()" >> logs/pattern_analysis.log 2>&1
+
+# Clear old market data (keep 90 days) - monthly on 1st at 8:00 AM
+0 8 1 * * cd $PROJECT_DIR && docker compose exec -T database psql -U khazad_user -d khazad_dum -c "DELETE FROM stock_metrics WHERE created_at < NOW() - INTERVAL '90 days';" >> logs/data_cleanup.log 2>&1
+
+# ==============================================================================
+# MONITORING AND ALERTING
+# ==============================================================================
+
+# Check disk space every 6 hours and alert if > 80%
+0 */6 * * * cd $PROJECT_DIR && df . | awk 'NR==2 {if($5+0 > 80) print "Disk usage high: " $5 " at " strftime("%Y-%m-%d %H:%M:%S")}' >> logs/alerts.log
+
+# Check memory usage every hour during trading hours
+0 9-16 * * 1-5 cd $PROJECT_DIR && free | awk 'NR==2{if($3/($3+$4)*100 > 85) print "Memory usage high: " $3/($3+$4)*100 "% at " strftime("%Y-%m-%d %H:%M:%S")}' >> logs/alerts.log
+
+# Container health check every 30 minutes
+*/30 * * * * cd $PROJECT_DIR && docker compose ps | grep -v "Up" | grep -v "NAME" && echo "Unhealthy containers detected at $(date)" >> logs/alerts.log || true
+
+# ==============================================================================
+# BACKUP VERIFICATION AND CLEANUP
+# ==============================================================================
+
+# Verify backup integrity monthly on 2nd at 9:00 AM
+0 9 2 * * cd $PROJECT_DIR && find deploy/backups -name "*.sql.gz" -mtime -1 -exec gunzip -t {} \; >> logs/backup_verification.log 2>&1 || echo "Backup verification failed at $(date)" >> logs/alerts.log
+
+# Clean backups older than 30 days, daily at 10:00 PM
+0 22 * * * cd $PROJECT_DIR && find deploy/backups -type d -mtime +30 -exec rm -rf {} \; >> logs/backup_cleanup.log 2>&1
+
+# ==============================================================================
+# SYSTEM UPDATES (CAREFUL - TEST FIRST!)
+# ==============================================================================
+
+# Check for system updates weekly on Saturday at 11:00 PM
+# Uncomment only if you want automatic updates (NOT recommended for trading systems)
+# 0 23 * * 6 cd $PROJECT_DIR && apt list --upgradable >> logs/updates.log 2>&1
+
+# ==============================================================================
+# CUSTOM ALERTS AND NOTIFICATIONS
+# ==============================================================================
+
+# Send daily summary at 6:00 PM EST (after market close)
+0 18 * * 1-5 cd $PROJECT_DIR && echo "Daily Khazad-dum Summary - $(date)" >> logs/daily_summary.log && docker compose exec -T database psql -U khazad_user -d khazad_dum -c "SELECT COUNT(*) as positions FROM position_tracking WHERE status='OPEN';" >> logs/daily_summary.log
+
+# Weekly performance report on Sunday at 8:00 PM
+0 20 * * 0 cd $PROJECT_DIR && docker compose exec -T database psql -U khazad_user -d khazad_dum -c "SELECT pattern_name, win_rate, total_trades, expectancy FROM pattern_summary ORDER BY expectancy DESC LIMIT 10;" >> logs/weekly_report.log
+
+# ==============================================================================
+# INSTALLATION INSTRUCTIONS
+# ==============================================================================
+#
+# To install this crontab:
+# 1. Update PROJECT_DIR path above to your actual path
+# 2. Update MAILTO if you want email notifications
+# 3. Install: crontab deploy/crontab
+# 4. Verify: crontab -l
+#
+# To remove: crontab -r
+#
+# Note: Make sure your system timezone is set correctly for market hours
+# ==============================================================================

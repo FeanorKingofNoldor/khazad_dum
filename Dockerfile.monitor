@@ -1,0 +1,56 @@
+# ==============================================================================
+# KHAZAD-DÛM MONITORING DASHBOARD - PRODUCTION DOCKERFILE  
+# Cyberpunk monitoring interface container
+# ==============================================================================
+
+FROM python:3.13-slim
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
+
+# Create non-root user
+RUN useradd --create-home --shell /bin/bash --uid 1001 monitor
+WORKDIR /app
+
+# Install Python dependencies for monitoring
+RUN pip install --no-cache-dir \
+    rich \
+    plotext \
+    redis \
+    psycopg2-binary \
+    fastapi \
+    uvicorn[standard] \
+    websockets \
+    prometheus-client \
+    pandas \
+    numpy
+
+# Copy monitoring modules
+COPY --chown=monitor:monitor khazad_monitor/ ./khazad_monitor/
+COPY --chown=monitor:monitor src/ ./src/
+COPY --chown=monitor:monitor config/ ./config/
+
+# Create necessary directories
+RUN mkdir -p /app/logs /app/monitor_data \
+    && chown -R monitor:monitor /app
+
+# Switch to non-root user
+USER monitor
+
+# Environment variables
+ENV PYTHONPATH=/app
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+# Expose port
+EXPOSE 8001
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+    CMD curl -f http://localhost:8001/health || exit 1
+
+# Default command
+CMD ["python", "-m", "khazad_monitor.cyberpunk_monitor"]

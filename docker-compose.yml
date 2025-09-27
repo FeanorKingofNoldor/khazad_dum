@@ -1,0 +1,308 @@
+# ==============================================================================
+# KHAZAD-DÛM TRADING SYSTEM - DOCKER COMPOSE
+# Complete production orchestration
+# ==============================================================================
+
+version: '3.8'
+
+services:
+  # ---------------------------------------------------------------------------
+  # PostgreSQL Database - Primary data storage
+  # ---------------------------------------------------------------------------
+  database:
+    image: postgres:16-alpine
+    container_name: khazad-database
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: khazad_dum
+      POSTGRES_USER: khazad_user
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-secure_password_change_me}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./deploy/database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ./deploy/database/backups:/backups
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U khazad_user -d khazad_dum"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - khazad-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+
+  # ---------------------------------------------------------------------------
+  # Redis - Caching and real-time data
+  # ---------------------------------------------------------------------------
+  redis:
+    image: redis:7-alpine
+    container_name: khazad-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-redis_secure_password}
+    volumes:
+      - redis_data:/data
+      - ./deploy/redis/redis.conf:/usr/local/etc/redis/redis.conf:ro
+    ports:
+      - "6380:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    networks:
+      - khazad-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "2"
+
+  # ---------------------------------------------------------------------------
+  # Main Trading Engine - Core Khazad-dûm system
+  # ---------------------------------------------------------------------------
+  trading-engine:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: khazad-trading-engine
+    restart: unless-stopped
+    depends_on:
+      database:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      # Database configuration
+      DATABASE_URL: postgresql://khazad_user:${DB_PASSWORD:-secure_password_change_me}@database:5432/khazad_dum
+      
+      # Redis configuration
+      REDIS_URL: redis://:${REDIS_PASSWORD:-redis_secure_password}@redis:6379/0
+      
+      # API Keys (loaded from .env file)
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      FINNHUB_API_KEY: ${FINNHUB_API_KEY}
+      POLYGON_API_KEY: ${POLYGON_API_KEY}
+      ALPHA_VANTAGE_KEY: ${ALPHA_VANTAGE_KEY}
+      REDDIT_CLIENT_ID: ${REDDIT_CLIENT_ID}
+      REDDIT_CLIENT_SECRET: ${REDDIT_CLIENT_SECRET}
+      
+      # IBKR Configuration
+      IBKR_HOST: ${IBKR_HOST:-127.0.0.1}
+      IBKR_PORT: ${IBKR_PORT:-4002}
+      IBKR_CLIENT_ID: ${IBKR_CLIENT_ID:-1}
+      
+      # Application settings
+      PRODUCTION: "true"
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      DEBUG: ${DEBUG:-false}
+    volumes:
+      - app_logs:/home/khazad/app/logs
+      - app_data:/home/khazad/app/data
+      - app_cache:/home/khazad/app/cache
+      - app_results:/home/khazad/app/results
+      - ./deploy/app/config:/home/khazad/app/config/production:ro
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - khazad-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200m"
+        max-file: "5"
+
+  # ---------------------------------------------------------------------------
+  # Monitoring Dashboard - Cyberpunk monitoring interface
+  # ---------------------------------------------------------------------------
+  monitor-dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile.monitor
+    container_name: khazad-monitor
+    restart: unless-stopped
+    depends_on:
+      - trading-engine
+      - database
+      - redis
+    environment:
+      DATABASE_URL: postgresql://khazad_user:${DB_PASSWORD:-secure_password_change_me}@database:5432/khazad_dum
+      REDIS_URL: redis://:${REDIS_PASSWORD:-redis_secure_password}@redis:6379/0
+      TRADING_ENGINE_URL: http://trading-engine:8000
+    volumes:
+      - app_logs:/app/logs:ro
+      - monitor_data:/app/monitor_data
+    ports:
+      - "8001:8001"
+    networks:
+      - khazad-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+
+  # ---------------------------------------------------------------------------
+  # Web Dashboard - Mobile-friendly monitoring interface
+  # ---------------------------------------------------------------------------
+  web-dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    container_name: khazad-web-dashboard
+    restart: unless-stopped
+    depends_on:
+      - trading-engine
+      - database
+      - redis
+    environment:
+      DATABASE_URL: postgresql://khazad_user:${DB_PASSWORD:-secure_password_change_me}@database:5432/khazad_dum
+      REDIS_URL: redis://:${REDIS_PASSWORD:-redis_secure_password}@redis:6379/0
+    volumes:
+      - app_logs:/app/logs:ro
+    ports:
+      - "8002:8002"
+    networks:
+      - khazad-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8002/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+
+  # ---------------------------------------------------------------------------
+  # Nginx - Reverse proxy, SSL termination, load balancer
+  # ---------------------------------------------------------------------------
+  nginx:
+    image: nginx:alpine
+    container_name: khazad-nginx
+    restart: unless-stopped
+    depends_on:
+      - trading-engine
+      - monitor-dashboard
+    volumes:
+      - ./deploy/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./deploy/nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./deploy/nginx/ssl:/etc/nginx/ssl:ro
+      - nginx_logs:/var/log/nginx
+      - static_files:/var/www/static:ro
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - khazad-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+
+  # ---------------------------------------------------------------------------
+  # Prometheus - Metrics collection (optional)
+  # ---------------------------------------------------------------------------
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: khazad-prometheus
+    restart: unless-stopped
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=15d'
+      - '--web.enable-lifecycle'
+    volumes:
+      - ./deploy/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      - khazad-network
+    profiles:
+      - monitoring
+
+  # ---------------------------------------------------------------------------
+  # Grafana - Metrics visualization (optional)
+  # ---------------------------------------------------------------------------
+  grafana:
+    image: grafana/grafana:latest
+    container_name: khazad-grafana
+    restart: unless-stopped
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:-admin_change_me}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./deploy/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./deploy/grafana/datasources:/etc/grafana/provisioning/datasources:ro
+    ports:
+      - "3000:3000"
+    networks:
+      - khazad-network
+    profiles:
+      - monitoring
+
+# =============================================================================
+# NETWORKS
+# =============================================================================
+networks:
+  khazad-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+# =============================================================================
+# VOLUMES
+# =============================================================================
+volumes:
+  # Database storage
+  postgres_data:
+    driver: local
+  
+  # Redis storage
+  redis_data:
+    driver: local
+    
+  # Application storage
+  app_logs:
+    driver: local
+  app_data:
+    driver: local
+  app_cache:
+    driver: local
+  app_results:
+    driver: local
+    
+  # Monitor storage
+  monitor_data:
+    driver: local
+    
+  # Nginx storage
+  nginx_logs:
+    driver: local
+  static_files:
+    driver: local
+    
+  # Monitoring storage (optional)
+  prometheus_data:
+    driver: local
+  grafana_data:
+    driver: local

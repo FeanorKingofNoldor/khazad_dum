@@ -1,0 +1,211 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.core.market_analysis.cnn_feed_parser &mdash; KHAZAD_DUM Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/khazad_dum_custom.css" />
+
+  
+    <link rel="canonical" href="https://github.com/FeanorKingofNoldor/khazad_dum_modules/src/core/market_analysis/cnn_feed_parser.html"/>
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2c3e50" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            KHAZAD_DUM
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../generated/src.core.html">src.core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../generated/src.data_pipeline.html">src.data_pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../generated/src.trading_engines.html">src.trading_engines</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2c3e50" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">KHAZAD_DUM</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">src.core.market_analysis.cnn_feed_parser</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for src.core.market_analysis.cnn_feed_parser</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Custom CNN Fear &amp; Greed Index scraper</span>
+<span class="sd">Since the package doesn&#39;t support Python 3.13</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span>
+
+
+<div class="viewcode-block" id="CNNFeedParser">
+<a class="viewcode-back" href="../../../../index.html#src.core.market_analysis.cnn_feed_parser.CNNFeedParser">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">CNNFeedParser</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fetches CNN Fear &amp; Greed Index without the broken package</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://production.dataviz.cnn.io/index/fearandgreed/graphdata&quot;</span>
+        
+<div class="viewcode-block" id="CNNFeedParser.get_fear_and_greed_index">
+<a class="viewcode-back" href="../../../../index.html#src.core.market_analysis.cnn_feed_parser.CNNFeedParser.get_fear_and_greed_index">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_fear_and_greed_index</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fetch the Fear &amp; Greed data from CNN</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Add headers to mimic a browser request</span>
+            <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;User-Agent&#39;</span><span class="p">:</span> <span class="s1">&#39;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;Accept&#39;</span><span class="p">:</span> <span class="s1">&#39;application/json, text/plain, */*&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;Referer&#39;</span><span class="p">:</span> <span class="s1">&#39;https://www.cnn.com/&#39;</span><span class="p">,</span>
+            <span class="p">}</span>
+            
+            <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+                
+                <span class="c1"># The API structure: data -&gt; fear_and_greed -&gt; score</span>
+                <span class="k">if</span> <span class="s1">&#39;fear_and_greed&#39;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+                    <span class="n">fg_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;fear_and_greed&#39;</span><span class="p">]</span>
+                    <span class="n">current_value</span> <span class="o">=</span> <span class="n">fg_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;score&#39;</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+                    
+                    <span class="c1"># Debug print to see what we got</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Successfully fetched CNN F&amp;G: </span><span class="si">{</span><span class="n">current_value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># Print what keys we actually got</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unexpected API structure. Keys: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="c1"># Try direct score access</span>
+                    <span class="n">current_value</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;score&#39;</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+                
+                <span class="c1"># Convert to integer</span>
+                <span class="n">current_value</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">current_value</span><span class="p">))</span>
+                
+                <span class="c1"># Determine text label</span>
+                <span class="k">if</span> <span class="n">current_value</span> <span class="o">&lt;</span> <span class="mi">25</span><span class="p">:</span>
+                    <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Extreme Fear&quot;</span>
+                <span class="k">elif</span> <span class="n">current_value</span> <span class="o">&lt;</span> <span class="mi">45</span><span class="p">:</span>
+                    <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Fear&quot;</span>
+                <span class="k">elif</span> <span class="n">current_value</span> <span class="o">&lt;</span> <span class="mi">55</span><span class="p">:</span>
+                    <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Neutral&quot;</span>
+                <span class="k">elif</span> <span class="n">current_value</span> <span class="o">&lt;</span> <span class="mi">75</span><span class="p">:</span>
+                    <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Greed&quot;</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Extreme Greed&quot;</span>
+                
+                <span class="k">return</span> <span class="p">{</span>
+                    <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="n">current_value</span><span class="p">,</span>
+                    <span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="n">text</span>
+                <span class="p">}</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;API returned status code: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                
+        <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">RequestException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Network error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONDecodeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;JSON parsing error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unexpected error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Fallback based on VIX if we can&#39;t get CNN</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;CNN API failed, using VIX-based estimate&quot;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">import</span><span class="w"> </span><span class="nn">yfinance</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">yf</span>
+            <span class="n">vix</span> <span class="o">=</span> <span class="n">yf</span><span class="o">.</span><span class="n">Ticker</span><span class="p">(</span><span class="s2">&quot;^VIX&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;regularMarketPrice&#39;</span><span class="p">]</span>
+            
+            <span class="k">if</span> <span class="n">vix</span> <span class="o">&lt;</span> <span class="mi">15</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mi">65</span><span class="p">,</span> <span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="s1">&#39;Greed&#39;</span><span class="p">}</span>
+            <span class="k">elif</span> <span class="n">vix</span> <span class="o">&lt;</span> <span class="mi">20</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span> <span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="s1">&#39;Neutral&#39;</span><span class="p">}</span>
+            <span class="k">elif</span> <span class="n">vix</span> <span class="o">&lt;</span> <span class="mi">30</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mi">35</span><span class="p">,</span> <span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="s1">&#39;Fear&#39;</span><span class="p">}</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span> <span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="s1">&#39;Extreme Fear&#39;</span><span class="p">}</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span> <span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="s1">&#39;Neutral&#39;</span><span class="p">}</span></div>
+
+    
+<div class="viewcode-block" id="CNNFeedParser.get_complete_report">
+<a class="viewcode-back" href="../../../../index.html#src.core.market_analysis.cnn_feed_parser.CNNFeedParser.get_complete_report">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_complete_report</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compatibility method&quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_fear_and_greed_index</span><span class="p">()</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;fear_greed&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">}</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, FeanorKingofNoldor.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

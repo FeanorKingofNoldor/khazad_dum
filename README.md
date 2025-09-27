@@ -417,27 +417,81 @@ class CustomFilter(StockFilter):
 
 ## Monitoring
 
+### 📱 Multi-Channel Monitoring System
+
+Khazad-dûm includes a comprehensive monitoring solution perfect for headless servers:
+
+#### **🌐 Web Dashboard (Primary)**
+```bash
+# Mobile-optimized web interface
+http://your-server-ip:8002/dashboard/
+
+# Access from anywhere - no SSH required!
+# Real-time updates, mobile-friendly, battery optimized
+```
+
+#### **🚨 Push Notifications (Secondary)**
+```bash
+# Configure in .env file:
+DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/YOUR/WEBHOOK
+TELEGRAM_BOT_TOKEN=your_bot_token
+TELEGRAM_CHAT_ID=your_chat_id
+
+# Get instant alerts on your phone for:
+# - Trading events
+# - System health changes  
+# - Critical errors
+# - Position updates
+```
+
+#### **🖥️ CLI Monitoring (Tertiary)**
+```bash
+# Enhanced professional monitor with launcher (recommended) ⭐
+python khazad_monitor/run_enhanced.py --demo        # Quick demo
+python khazad_monitor/run_enhanced.py               # Live data
+python khazad_monitor/run_enhanced.py --mock        # Test mode
+# Features: Real DB integration, live charts, interactive controls
+# See: khazad_monitor/ENHANCED_MONITOR_README.md
+
+# Direct usage (advanced)
+python khazad_monitor/enhanced_monitor.py [--mock] [--refresh 5]
+
+# Alternative monitors:
+python khazad_monitor/cyberpunk_monitor.py  # Cyberpunk-themed
+python khazad_monitor/simple_monitor.py     # Minimal interface
+```
+
 ### Performance Metrics
 
-Monitor system performance:
-
 ```bash
-# View current positions
-python scripts/monitoring/view_positions.py
+# Web dashboard metrics (real-time)
+http://your-server-ip:8002/api/health
+http://your-server-ip:8002/api/trading-summary
+http://your-server-ip:8002/api/positions
 
-# Performance report
-python scripts/monitoring/performance_report.py
-
-# Pattern statistics
-python scripts/maintenance/pattern_dashboard.py
+# CLI performance monitoring
+make health          # System health check
+make status          # Container status
+make perf            # Performance metrics
 ```
 
 ### Logs
 
 Logs are stored in:
 - `logs/main.log` - Main system log
-- `logs/trading.log` - Trading decisions
+- `logs/trading.log` - Trading decisions  
 - `logs/errors.log` - Error tracking
+- `logs/health.log` - Health check results
+- `logs/alerts.log` - Alert notifications
+
+### Monitoring Strategy
+
+See `MONITORING_STRATEGY.md` for complete setup instructions including:
+- Mobile-optimized web dashboard setup
+- Push notification configuration
+- Remote access via SSH tunneling
+- Alert levels and behaviors
+- Battery optimization features
 
 ## Troubleshooting
 

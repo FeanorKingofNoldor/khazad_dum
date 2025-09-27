@@ -1,0 +1,493 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KHAZAD_DÛM API Documentation &mdash; KHAZAD_DUM Documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/khazad_dum_custom.css" />
+
+  
+    <link rel="canonical" href="https://github.com/FeanorKingofNoldor/khazad_dumindex.html"/>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=8d563738"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="src.core" href="generated/src.core.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2c3e50" >
+
+          
+          
+          <a href="#" class="icon icon-home">
+            KHAZAD_DUM
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="generated/src.core.html">src.core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generated/src.data_pipeline.html">src.data_pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generated/src.trading_engines.html">src.trading_engines</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2c3e50" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">KHAZAD_DUM</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">KHAZAD_DÛM API Documentation</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/FeanorKingofNoldor/khazad_dum/blob/main/docs/api/index.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="khazad-dum-api-documentation">
+<h1>KHAZAD_DÛM API Documentation<a class="headerlink" href="#khazad-dum-api-documentation" title="Link to this heading"></a></h1>
+<div style="text-align: center; padding: 20px;">
+<h1 style="font-family: monospace; color: #2c3e50;">
+███████╗██╗  ██╗ █████╗ ███████╗ █████╗ ██████╗       ██████╗ ██╗   ██╗███╗   ███╗<br>
+██╔════╝██║  ██║██╔══██╗╚══███╔╝██╔══██╗██╔══██╗      ██╔══██╗██║   ██║████╗ ████║<br>
+██║     ███████║███████║  ███╔╝ ███████║██║  ██║█████╗██║  ██║██║   ██║██╔████╔██║<br>
+██║     ██╔══██║██╔══██║ ███╔╝  ██╔══██║██║  ██║╚════╝██║  ██║██║   ██║██║╚██╔╝██║<br>
+╚██████╗██║  ██║██║  ██║███████╗██║  ██║██████╔╝      ██████╔╝╚██████╔╝██║ ╚═╝ ██║<br>
+ ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝       ╚═════╝  ╚═════╝ ╚═╝     ╚═╝<br>
+</h1>
+<h3 style="color: #34495e; font-style: italic;">
+🏔️ Algorithmic Trading System - "They delved too greedily and too deep..."
+</h3>
+</div><p class="centered">
+<strong><strong>Created by FeanorKingofNoldor</strong> | <a class="reference external" href="https://github.com/FeanorKingofNoldor/khazad_dum">GitHub Repository</a></strong></p><p>Welcome to the KHAZAD_DÛM API Documentation! This documentation is automatically generated from the codebase docstrings and provides comprehensive information about all classes, functions, and modules in the algorithmic trading system.</p>
+</section>
+<section id="overview">
+<h1>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h1>
+<p>KHAZAD_DÛM is a sophisticated algorithmic trading system that implements a 6-stage pipeline:</p>
+<ol class="arabic simple">
+<li><p><strong>Market Regime Detection</strong> - Classify market conditions using sentiment indicators</p></li>
+<li><p><strong>Stock Screening</strong> - Multi-layer filtering from S&amp;P 500 universe</p></li>
+<li><p><strong>AI Analysis</strong> - TradingAgents framework for fundamental/technical research</p></li>
+<li><p><strong>Pattern Recognition</strong> - Historical pattern learning with memory injection</p></li>
+<li><p><strong>Portfolio Construction</strong> - Regime-aware position sizing and risk management</p></li>
+<li><p><strong>Performance Observation</strong> - Continuous feedback loops for system improvement</p></li>
+</ol>
+</section>
+<section id="system-architecture">
+<h1>System Architecture<a class="headerlink" href="#system-architecture" title="Link to this heading"></a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+</div>
+</section>
+<section id="quick-start-guide">
+<h1>Quick Start Guide<a class="headerlink" href="#quick-start-guide" title="Link to this heading"></a></h1>
+<p>For developers new to the codebase:</p>
+<ol class="arabic simple">
+<li><p><strong>Read the main README</strong>: Start with the project overview</p></li>
+<li><p><strong>Check the Quick Reference</strong>: <code class="docutils literal notranslate"><span class="pre">docs/reference/QUICK_REFERENCE.md</span></code> for immediate setup</p></li>
+<li><p><strong>Explore this API documentation</strong>: Navigate through the modules below</p></li>
+<li><p><strong>Run the examples</strong>: Each module includes executable examples in docstrings</p></li>
+</ol>
+</section>
+<section id="api-reference">
+<h1>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading"></a></h1>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#module-src.core" title="src.core"><code class="xref py py-obj docutils literal notranslate"><span class="pre">src.core</span></code></a></p></td>
+<td><p>Package initialization</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">src.data_pipeline</span></code></p></td>
+<td><p>Package initialization</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">src.trading_engines</span></code></p></td>
+<td><p>Package initialization</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="module-details">
+<h1>Module Details<a class="headerlink" href="#module-details" title="Link to this heading"></a></h1>
+<section id="module-src.core">
+<span id="core-modules"></span><h2>Core Modules<a class="headerlink" href="#module-src.core" title="Link to this heading"></a></h2>
+<p>Package initialization</p>
+<section id="module-src.core.market_analysis.cnn_feed_parser">
+<span id="market-analysis"></span><h3>Market Analysis<a class="headerlink" href="#module-src.core.market_analysis.cnn_feed_parser" title="Link to this heading"></a></h3>
+<p>Custom CNN Fear &amp; Greed Index scraper
+Since the package doesn’t support Python 3.13</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.core.market_analysis.cnn_feed_parser.CNNFeedParser">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.core.market_analysis.cnn_feed_parser.</span></span><span class="sig-name descname"><span class="pre">CNNFeedParser</span></span><a class="reference internal" href="_modules/src/core/market_analysis/cnn_feed_parser.html#CNNFeedParser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.core.market_analysis.cnn_feed_parser.CNNFeedParser" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Fetches CNN Fear &amp; Greed Index without the broken package</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.core.market_analysis.cnn_feed_parser.CNNFeedParser.get_complete_report">
+<span class="sig-name descname"><span class="pre">get_complete_report</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/core/market_analysis/cnn_feed_parser.html#CNNFeedParser.get_complete_report"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.core.market_analysis.cnn_feed_parser.CNNFeedParser.get_complete_report" title="Link to this definition"></a></dt>
+<dd><p>Compatibility method</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.core.market_analysis.cnn_feed_parser.CNNFeedParser.get_fear_and_greed_index">
+<span class="sig-name descname"><span class="pre">get_fear_and_greed_index</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a></span></span><a class="reference internal" href="_modules/src/core/market_analysis/cnn_feed_parser.html#CNNFeedParser.get_fear_and_greed_index"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.core.market_analysis.cnn_feed_parser.CNNFeedParser.get_fear_and_greed_index" title="Link to this definition"></a></dt>
+<dd><p>Fetch the Fear &amp; Greed data from CNN</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="stock-screening">
+<h3>Stock Screening<a class="headerlink" href="#stock-screening" title="Link to this heading"></a></h3>
+</section>
+<section id="module-src.core.pattern_recognition.pattern_classifier">
+<span id="pattern-recognition"></span><h3>Pattern Recognition<a class="headerlink" href="#module-src.core.pattern_recognition.pattern_classifier" title="Link to this heading"></a></h3>
+<p>Pattern Classification System
+Classifies trades into patterns based on market conditions and technical indicators</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.core.pattern_recognition.pattern_classifier.PatternClassifier">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.core.pattern_recognition.pattern_classifier.</span></span><span class="sig-name descname"><span class="pre">PatternClassifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pattern_db</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/core/pattern_recognition/pattern_classifier.html#PatternClassifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.core.pattern_recognition.pattern_classifier.PatternClassifier" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Classifies trades into patterns for tracking and learning</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pattern_db</strong> – PatternDatabase instance for pattern operations</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.core.pattern_recognition.pattern_classifier.PatternClassifier.classify_batch">
+<span class="sig-name descname"><span class="pre">classify_batch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">candidates</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">regime_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a></span></span><a class="reference internal" href="_modules/src/core/pattern_recognition/pattern_classifier.html#PatternClassifier.classify_batch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.core.pattern_recognition.pattern_classifier.PatternClassifier.classify_batch" title="Link to this definition"></a></dt>
+<dd><p>Classify multiple candidates at once</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>candidates</strong> – List of stock metrics dicts</p></li>
+<li><p><strong>regime_data</strong> – Current regime information</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dict mapping symbols to patterns</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.core.pattern_recognition.pattern_classifier.PatternClassifier.classify_trade">
+<span class="sig-name descname"><span class="pre">classify_trade</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stock_metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">regime_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a></span></span><a class="reference internal" href="_modules/src/core/pattern_recognition/pattern_classifier.html#PatternClassifier.classify_trade"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.core.pattern_recognition.pattern_classifier.PatternClassifier.classify_trade" title="Link to this definition"></a></dt>
+<dd><p>Main classification method - determines pattern for a potential trade</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stock_metrics</strong> – Dict with rsi_2, volume_ratio, sma20_ratio, etc.</p></li>
+<li><p><strong>regime_data</strong> – Dict with regime, fear_greed_value, vix</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dict with pattern_id and components</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.core.pattern_recognition.pattern_classifier.PatternClassifier.get_pattern_distribution">
+<span class="sig-name descname"><span class="pre">get_pattern_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">regime</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a></span></span><a class="reference internal" href="_modules/src/core/pattern_recognition/pattern_classifier.html#PatternClassifier.get_pattern_distribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.core.pattern_recognition.pattern_classifier.PatternClassifier.get_pattern_distribution" title="Link to this definition"></a></dt>
+<dd><p>Get distribution of patterns for analysis</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>regime</strong> – Optional regime filter</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dict with pattern counts and performance</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.core.pattern_recognition.pattern_classifier.PatternClassifier.validate_classification">
+<span class="sig-name descname"><span class="pre">validate_classification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pattern_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">actual_outcome</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a></span></span><a class="reference internal" href="_modules/src/core/pattern_recognition/pattern_classifier.html#PatternClassifier.validate_classification"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.core.pattern_recognition.pattern_classifier.PatternClassifier.validate_classification" title="Link to this definition"></a></dt>
+<dd><p>Validate if classification was appropriate based on outcome</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pattern_id</strong> – Pattern that was used</p></li>
+<li><p><strong>actual_outcome</strong> – What actually happened</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Validation results</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<p id="module-src.core.pattern_recognition.pattern_tracker">Pattern Performance Tracker
+Tracks and updates pattern performance in real-time</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.core.pattern_recognition.pattern_tracker.PatternTracker">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.core.pattern_recognition.pattern_tracker.</span></span><span class="sig-name descname"><span class="pre">PatternTracker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pattern_db</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/core/pattern_recognition/pattern_tracker.html#PatternTracker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.core.pattern_recognition.pattern_tracker.PatternTracker" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Tracks pattern performance and provides real-time statistics</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pattern_db</strong> – PatternDatabase instance</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.core.pattern_recognition.pattern_tracker.PatternTracker.get_pattern_context">
+<span class="sig-name descname"><span class="pre">get_pattern_context</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pattern_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a></span></span><a class="reference internal" href="_modules/src/core/pattern_recognition/pattern_tracker.html#PatternTracker.get_pattern_context"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.core.pattern_recognition.pattern_tracker.PatternTracker.get_pattern_context" title="Link to this definition"></a></dt>
+<dd><p>Get current pattern context for decision making</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pattern_id</strong> – Pattern to get context for</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dict with pattern statistics and recommendations</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.core.pattern_recognition.pattern_tracker.PatternTracker.get_pattern_report">
+<span class="sig-name descname"><span class="pre">get_pattern_report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">regime</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a></span></span><a class="reference internal" href="_modules/src/core/pattern_recognition/pattern_tracker.html#PatternTracker.get_pattern_report"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.core.pattern_recognition.pattern_tracker.PatternTracker.get_pattern_report" title="Link to this definition"></a></dt>
+<dd><p>Generate comprehensive pattern performance report</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>regime</strong> – Optional regime filter</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dict with pattern analysis</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.core.pattern_recognition.pattern_tracker.PatternTracker.track_entry">
+<span class="sig-name descname"><span class="pre">track_entry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pattern_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">entry_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="_modules/src/core/pattern_recognition/pattern_tracker.html#PatternTracker.track_entry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.core.pattern_recognition.pattern_tracker.PatternTracker.track_entry" title="Link to this definition"></a></dt>
+<dd><p>Track when a trade enters based on a pattern</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pattern_id</strong> – Pattern being traded</p></li>
+<li><p><strong>entry_data</strong> – Entry information including symbol, price, indicators</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Success boolean</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.core.pattern_recognition.pattern_tracker.PatternTracker.track_exit">
+<span class="sig-name descname"><span class="pre">track_exit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pattern_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">exit_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="_modules/src/core/pattern_recognition/pattern_tracker.html#PatternTracker.track_exit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.core.pattern_recognition.pattern_tracker.PatternTracker.track_exit" title="Link to this definition"></a></dt>
+<dd><p>Track when a pattern-based trade exits</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pattern_id</strong> – Pattern that was traded</p></li>
+<li><p><strong>exit_data</strong> – Exit information including pnl, holding period</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Success boolean</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="portfolio-management">
+<h3>Portfolio Management<a class="headerlink" href="#portfolio-management" title="Link to this heading"></a></h3>
+</section>
+</section>
+<section id="data-pipeline">
+<h2>Data Pipeline<a class="headerlink" href="#data-pipeline" title="Link to this heading"></a></h2>
+<section id="storage">
+<h3>Storage<a class="headerlink" href="#storage" title="Link to this heading"></a></h3>
+</section>
+<section id="module-src.data_pipeline.market_data">
+<span id="market-data"></span><h3>Market Data<a class="headerlink" href="#module-src.data_pipeline.market_data" title="Link to this heading"></a></h3>
+<p>Package initialization</p>
+</section>
+</section>
+<section id="trading-engines">
+<h2>Trading Engines<a class="headerlink" href="#trading-engines" title="Link to this heading"></a></h2>
+<section id="tradingagents-integration">
+<h3>TradingAgents Integration<a class="headerlink" href="#tradingagents-integration" title="Link to this heading"></a></h3>
+</section>
+</section>
+</section>
+<section id="module-config.settings.base_config">
+<span id="configuration"></span><h1>Configuration<a class="headerlink" href="#module-config.settings.base_config" title="Link to this heading"></a></h1>
+<p>KHAZAD_DUM Configuration - Complete Settings
+All configuration in one place - no hardcoded values elsewhere</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="config.settings.base_config.get_database_config">
+<span class="sig-prename descclassname"><span class="pre">config.settings.base_config.</span></span><span class="sig-name descname"><span class="pre">get_database_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/config/settings/base_config.html#get_database_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#config.settings.base_config.get_database_config" title="Link to this definition"></a></dt>
+<dd><p>Get database configuration with validation</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="config.settings.base_config.get_ibkr_config">
+<span class="sig-prename descclassname"><span class="pre">config.settings.base_config.</span></span><span class="sig-name descname"><span class="pre">get_ibkr_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/config/settings/base_config.html#get_ibkr_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#config.settings.base_config.get_ibkr_config" title="Link to this definition"></a></dt>
+<dd><p>Get IBKR configuration dictionary</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="config.settings.base_config.get_tradingagents_config">
+<span class="sig-prename descclassname"><span class="pre">config.settings.base_config.</span></span><span class="sig-name descname"><span class="pre">get_tradingagents_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/config/settings/base_config.html#get_tradingagents_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#config.settings.base_config.get_tradingagents_config" title="Link to this definition"></a></dt>
+<dd><p>Get TradingAgents configuration dictionary</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="config.settings.base_config.load_api_keys_from_env">
+<span class="sig-prename descclassname"><span class="pre">config.settings.base_config.</span></span><span class="sig-name descname"><span class="pre">load_api_keys_from_env</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/config/settings/base_config.html#load_api_keys_from_env"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#config.settings.base_config.load_api_keys_from_env" title="Link to this definition"></a></dt>
+<dd><p>Securely load API keys from .env file with validation</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="config.settings.base_config.validate_configuration">
+<span class="sig-prename descclassname"><span class="pre">config.settings.base_config.</span></span><span class="sig-name descname"><span class="pre">validate_configuration</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/config/settings/base_config.html#validate_configuration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#config.settings.base_config.validate_configuration" title="Link to this definition"></a></dt>
+<dd><p>Validate critical configuration values</p>
+</dd></dl>
+
+</section>
+<section id="development-guide">
+<h1>Development Guide<a class="headerlink" href="#development-guide" title="Link to this heading"></a></h1>
+<section id="adding-documentation">
+<h2>Adding Documentation<a class="headerlink" href="#adding-documentation" title="Link to this heading"></a></h2>
+<p>All Python files in KHAZAD_DÛM should follow these documentation standards:</p>
+<ol class="arabic simple">
+<li><p><strong>File Headers</strong>: Use the template from <code class="docutils literal notranslate"><span class="pre">docs/templates/file_header_template.py</span></code></p></li>
+<li><p><strong>Docstrings</strong>: Follow Google-style docstrings for all classes and functions</p></li>
+<li><p><strong>Type Hints</strong>: Use comprehensive type annotations</p></li>
+<li><p><strong>Examples</strong>: Include usage examples in docstrings</p></li>
+</ol>
+<p>Example Function Documentation:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">process_symbols</span><span class="p">(</span><span class="n">symbols</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+                   <span class="n">config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Process a list of stock symbols through the trading pipeline.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        symbols (List[str]): Stock symbols to process (e.g., [&#39;AAPL&#39;, &#39;MSFT&#39;])</span>
+<span class="sd">        config (Dict[str, Any], optional): Custom configuration. Defaults to None.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Dict[str, Any]: Processing results with metadata</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If symbols list is empty</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; results = process_symbols([&#39;AAPL&#39;, &#39;MSFT&#39;])</span>
+<span class="sd">        &gt;&gt;&gt; print(len(results[&#39;processed&#39;]))</span>
+<span class="sd">        2</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="building-documentation">
+<h2>Building Documentation<a class="headerlink" href="#building-documentation" title="Link to this heading"></a></h2>
+<p>To build the HTML documentation:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">docs</span><span class="o">/</span><span class="n">api</span>
+<span class="n">sphinx</span><span class="o">-</span><span class="n">build</span> <span class="o">-</span><span class="n">b</span> <span class="n">html</span> <span class="o">.</span> <span class="n">_build</span>
+</pre></div>
+</div>
+<p>The generated documentation will be available in <code class="docutils literal notranslate"><span class="pre">docs/api/_build/index.html</span></code>.</p>
+</section>
+</section>
+<section id="indices-and-tables">
+<h1>Indices and Tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading"></a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</section>
+<section id="contact-links">
+<h1>Contact &amp; Links<a class="headerlink" href="#contact-links" title="Link to this heading"></a></h1>
+<ul class="simple">
+<li><p><strong>Author</strong>: FeanorKingofNoldor</p></li>
+<li><p><strong>Repository</strong>: <a class="reference external" href="https://github.com/FeanorKingofNoldor/khazad_dum">https://github.com/FeanorKingofNoldor/khazad_dum</a></p></li>
+<li><p><strong>Documentation</strong>: Generated automatically from docstrings</p></li>
+<li><p><strong>License</strong>: MIT License</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This documentation is automatically generated from the source code docstrings.
+For the most up-to-date information, always refer to the source code itself.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>KHAZAD_DÛM is a trading system that involves financial risk. Always thoroughly
+test any modifications in a paper trading environment before deploying to live markets.</p>
+</div>
+<p>—</p>
+<p><em>“In the depths of Khazad-dûm, the markets reveal their secrets to those who dare to delve deep enough…”</em></p>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="generated/src.core.html" class="btn btn-neutral float-right" title="src.core" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, FeanorKingofNoldor.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

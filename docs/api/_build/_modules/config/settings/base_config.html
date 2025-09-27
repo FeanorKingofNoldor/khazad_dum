@@ -1,0 +1,574 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>config.settings.base_config &mdash; KHAZAD_DUM Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/khazad_dum_custom.css" />
+
+  
+    <link rel="canonical" href="https://github.com/FeanorKingofNoldor/khazad_dum_modules/config/settings/base_config.html"/>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2c3e50" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            KHAZAD_DUM
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../generated/src.core.html">src.core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../generated/src.data_pipeline.html">src.data_pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../generated/src.trading_engines.html">src.trading_engines</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2c3e50" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">KHAZAD_DUM</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">config.settings.base_config</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for config.settings.base_config</h1><div class="highlight"><pre>
+<span></span><span class="c1"># config/settings.py</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">KHAZAD_DUM Configuration - Complete Settings</span>
+<span class="sd">All configuration in one place - no hardcoded values elsewhere</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+
+<span class="c1"># =============================================================================</span>
+<span class="c1"># PATHS AND DIRECTORIES</span>
+<span class="c1"># =============================================================================</span>
+
+<span class="c1"># Project root directory</span>
+<span class="n">PROJECT_ROOT</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span>
+
+<span class="c1"># Database path - main SQLite database for all KHAZAD_DUM data</span>
+<span class="n">DATABASE_PATH</span> <span class="o">=</span> <span class="n">PROJECT_ROOT</span> <span class="o">/</span> <span class="s2">&quot;config&quot;</span> <span class="o">/</span> <span class="s2">&quot;data&quot;</span> <span class="o">/</span> <span class="s2">&quot;databases&quot;</span> <span class="o">/</span> <span class="s2">&quot;khazad_dum.db&quot;</span>
+
+<span class="c1"># Data directories</span>
+<span class="n">DATA_DIR</span> <span class="o">=</span> <span class="n">PROJECT_ROOT</span> <span class="o">/</span> <span class="s2">&quot;data&quot;</span>         <span class="c1"># General data storage</span>
+<span class="n">CACHE_DIR</span> <span class="o">=</span> <span class="n">PROJECT_ROOT</span> <span class="o">/</span> <span class="s2">&quot;cache&quot;</span>       <span class="c1"># Temporary cache files</span>
+<span class="n">RESULTS_DIR</span> <span class="o">=</span> <span class="n">PROJECT_ROOT</span> <span class="o">/</span> <span class="s2">&quot;results&quot;</span>   <span class="c1"># Analysis results and reports</span>
+<span class="n">LOGS_DIR</span> <span class="o">=</span> <span class="n">PROJECT_ROOT</span> <span class="o">/</span> <span class="s2">&quot;logs&quot;</span>         <span class="c1"># Log files</span>
+
+<span class="c1"># TradingAgents library path</span>
+<span class="n">TRADINGAGENTS_LIB_PATH</span> <span class="o">=</span> <span class="n">PROJECT_ROOT</span> <span class="o">/</span> <span class="s2">&quot;tradingagents_lib&quot;</span>
+
+<span class="c1"># Environment file for API keys</span>
+<span class="n">ENV_FILE_PATH</span> <span class="o">=</span> <span class="n">TRADINGAGENTS_LIB_PATH</span> <span class="o">/</span> <span class="s2">&quot;.env&quot;</span>
+
+<span class="c1"># =============================================================================</span>
+<span class="c1"># API KEYS AND AUTHENTICATION</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1"># Secure API key loading with validation</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_required_env_var</span><span class="p">(</span><span class="n">var_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">default_value</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Securely get environment variable with optional warning for missing keys&quot;&quot;&quot;</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">var_name</span><span class="p">,</span> <span class="n">default_value</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">value</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">default_value</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Missing required environment variable: </span><span class="si">{</span><span class="n">var_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="ne">UserWarning</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">value</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_validate_api_key</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">service_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate API key format and warn if missing&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">key</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    
+    <span class="c1"># Basic validation - ensure it&#39;s not obviously fake or placeholder</span>
+    <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;your_key_here&#39;</span><span class="p">,</span> <span class="s1">&#39;placeholder&#39;</span><span class="p">,</span> <span class="s1">&#39;changeme&#39;</span><span class="p">,</span> <span class="s1">&#39;test&#39;</span><span class="p">]:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid placeholder </span><span class="si">{</span><span class="n">service_name</span><span class="si">}</span><span class="s2"> API key detected&quot;</span><span class="p">,</span> <span class="ne">UserWarning</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">:</span>  <span class="c1"># Most API keys are longer than 10 chars</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Suspiciously short </span><span class="si">{</span><span class="n">service_name</span><span class="si">}</span><span class="s2"> API key&quot;</span><span class="p">,</span> <span class="ne">UserWarning</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">key</span>
+
+<span class="c1"># Load API keys with validation</span>
+<span class="n">OPENAI_API_KEY</span> <span class="o">=</span> <span class="n">_validate_api_key</span><span class="p">(</span><span class="n">_get_required_env_var</span><span class="p">(</span><span class="s2">&quot;OPENAI_API_KEY&quot;</span><span class="p">),</span> <span class="s2">&quot;OpenAI&quot;</span><span class="p">)</span>
+<span class="n">FINNHUB_API_KEY</span> <span class="o">=</span> <span class="n">_validate_api_key</span><span class="p">(</span><span class="n">_get_required_env_var</span><span class="p">(</span><span class="s2">&quot;FINNHUB_API_KEY&quot;</span><span class="p">),</span> <span class="s2">&quot;Finnhub&quot;</span><span class="p">)</span>
+<span class="n">POLYGON_API_KEY</span> <span class="o">=</span> <span class="n">_validate_api_key</span><span class="p">(</span><span class="n">_get_required_env_var</span><span class="p">(</span><span class="s2">&quot;POLYGON_API_KEY&quot;</span><span class="p">),</span> <span class="s2">&quot;Polygon&quot;</span><span class="p">)</span>
+<span class="n">ALPHA_VANTAGE_KEY</span> <span class="o">=</span> <span class="n">_validate_api_key</span><span class="p">(</span><span class="n">_get_required_env_var</span><span class="p">(</span><span class="s2">&quot;ALPHA_VANTAGE_KEY&quot;</span><span class="p">),</span> <span class="s2">&quot;Alpha Vantage&quot;</span><span class="p">)</span>
+<span class="n">REDDIT_CLIENT_ID</span> <span class="o">=</span> <span class="n">_validate_api_key</span><span class="p">(</span><span class="n">_get_required_env_var</span><span class="p">(</span><span class="s2">&quot;REDDIT_CLIENT_ID&quot;</span><span class="p">),</span> <span class="s2">&quot;Reddit Client&quot;</span><span class="p">)</span>
+<span class="n">REDDIT_CLIENT_SECRET</span> <span class="o">=</span> <span class="n">_validate_api_key</span><span class="p">(</span><span class="n">_get_required_env_var</span><span class="p">(</span><span class="s2">&quot;REDDIT_CLIENT_SECRET&quot;</span><span class="p">),</span> <span class="s2">&quot;Reddit Secret&quot;</span><span class="p">)</span>
+
+<span class="c1"># =============================================================================</span>
+<span class="c1"># PATTERN SYSTEM CONFIGURATION</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1"># The pattern system classifies trades into categories and tracks their performance</span>
+<span class="c1"># over time to identify which setups work best in different market conditions</span>
+
+<span class="c1"># Pattern Classification Thresholds</span>
+<span class="c1"># These determine how trades are categorized based on technical indicators</span>
+<span class="n">PATTERN_RSI_THRESHOLDS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;oversold&#39;</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span>      <span class="c1"># RSI below 30 = oversold (potential bounce)</span>
+    <span class="s1">&#39;overbought&#39;</span><span class="p">:</span> <span class="mi">70</span>     <span class="c1"># RSI above 70 = overbought (potential reversal)</span>
+<span class="p">}</span>
+
+<span class="n">PATTERN_VOLUME_THRESHOLDS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;low&#39;</span><span class="p">:</span> <span class="mf">0.7</span><span class="p">,</span>          <span class="c1"># Volume &lt; 70% of average (quiet trading)</span>
+    <span class="s1">&#39;high&#39;</span><span class="p">:</span> <span class="mf">1.5</span><span class="p">,</span>         <span class="c1"># Volume &gt; 150% of average (increased interest)</span>
+    <span class="s1">&#39;explosive&#39;</span><span class="p">:</span> <span class="mf">2.5</span>     <span class="c1"># Volume &gt; 250% of average (major event/breakout)</span>
+<span class="p">}</span>
+
+<span class="n">PATTERN_FEAR_GREED_THRESHOLDS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;extreme_fear&#39;</span><span class="p">:</span> <span class="mi">25</span><span class="p">,</span>  <span class="c1"># Market panic - often good for contrarian buys</span>
+    <span class="s1">&#39;fear&#39;</span><span class="p">:</span> <span class="mi">45</span><span class="p">,</span>          <span class="c1"># Market worried - selective opportunities</span>
+    <span class="s1">&#39;neutral&#39;</span><span class="p">:</span> <span class="mi">55</span><span class="p">,</span>       <span class="c1"># Market balanced - normal trading</span>
+    <span class="s1">&#39;greed&#39;</span><span class="p">:</span> <span class="mi">75</span>         <span class="c1"># Market euphoric - be cautious</span>
+<span class="p">}</span>
+
+<span class="c1"># Pattern Confidence Levels</span>
+<span class="c1"># Based on sample size - more trades = more statistical confidence</span>
+<span class="n">PATTERN_CONFIDENCE_THRESHOLDS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;high&#39;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>          <span class="c1"># 50+ trades = high statistical confidence</span>
+    <span class="s1">&#39;medium&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>        <span class="c1"># 20-49 trades = moderate confidence</span>
+    <span class="s1">&#39;low&#39;</span><span class="p">:</span> <span class="mi">0</span>             <span class="c1"># &lt;20 trades = low confidence, be careful</span>
+<span class="p">}</span>
+
+<span class="c1"># Pattern Performance Tracking</span>
+<span class="n">PATTERN_RECENT_TRADES_WINDOW</span> <span class="o">=</span> <span class="mi">20</span>      <span class="c1"># Track last 20 trades for momentum</span>
+<span class="n">PATTERN_MOMENTUM_THRESHOLD</span> <span class="o">=</span> <span class="mf">0.15</span>      <span class="c1"># 15% change = significant momentum shift</span>
+<span class="n">PATTERN_BREAKING_THRESHOLD</span> <span class="o">=</span> <span class="mf">0.40</span>      <span class="c1"># Win rate &lt;40% = pattern likely broken</span>
+<span class="n">PATTERN_HOT_IMPROVEMENT</span> <span class="o">=</span> <span class="mf">0.10</span>         <span class="c1"># 10% recent improvement = &quot;hot&quot; pattern</span>
+<span class="n">PATTERN_STALE_DAYS</span> <span class="o">=</span> <span class="mi">30</span>               <span class="c1"># Deactivate patterns unused for 30 days</span>
+
+<span class="c1"># Pattern Analysis Settings</span>
+<span class="n">PATTERN_MIN_TRADES_FOR_ANALYSIS</span> <span class="o">=</span> <span class="mi">20</span>   <span class="c1"># Need 20+ trades for reliable stats</span>
+<span class="n">PATTERN_MIN_TRADES_FOR_MEMORY</span> <span class="o">=</span> <span class="mi">10</span>     <span class="c1"># Need 10+ trades before teaching agents</span>
+<span class="n">PATTERN_LOOKBACK_DAYS</span> <span class="o">=</span> <span class="mi">30</span>             <span class="c1"># Analyze pattern performance over 30 days</span>
+<span class="n">PATTERN_LEARNING_TRIGGER</span> <span class="o">=</span> <span class="mi">20</span>          <span class="c1"># Run deep learning every 20 trades</span>
+
+<span class="c1"># Dynamic Position Management (Pattern-based)</span>
+<span class="c1"># Adjust stops and targets based on pattern performance</span>
+<span class="n">PATTERN_STOP_MULTIPLIERS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;broken&#39;</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">,</span>       <span class="c1"># Tighter stop (2x ATR) for failing patterns</span>
+    <span class="s1">&#39;normal&#39;</span><span class="p">:</span> <span class="mf">2.5</span><span class="p">,</span>       <span class="c1"># Standard stop (2.5x ATR)</span>
+    <span class="s1">&#39;hot&#39;</span><span class="p">:</span> <span class="mf">3.0</span>          <span class="c1"># Wider stop (3x ATR) for winning patterns</span>
+<span class="p">}</span>
+
+<span class="n">PATTERN_TARGET_MULTIPLIERS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;broken&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>       <span class="c1"># Take profits quicker (0.5x) on weak patterns</span>
+    <span class="s1">&#39;normal&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>       <span class="c1"># Standard profit target</span>
+    <span class="s1">&#39;hot&#39;</span><span class="p">:</span> <span class="mf">1.5</span>          <span class="c1"># Let winners run (1.5x) on strong patterns</span>
+<span class="p">}</span>
+
+<span class="n">PATTERN_MAX_HOLD_DAYS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;broken&#39;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span>         <span class="c1"># Exit broken patterns within 7 days</span>
+    <span class="s1">&#39;normal&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>        <span class="c1"># Standard 10-day holding period</span>
+    <span class="s1">&#39;hot&#39;</span><span class="p">:</span> <span class="mi">14</span>           <span class="c1"># Give hot patterns 14 days to work</span>
+<span class="p">}</span>
+
+<span class="c1"># Position sizing based on pattern confidence</span>
+<span class="c1"># Example: High confidence pattern with 70% win rate → 1.5x position size</span>
+<span class="n">PATTERN_POSITION_SIZE_MULTIPLIERS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;high_confidence&#39;</span><span class="p">:</span> <span class="mf">1.5</span><span class="p">,</span>     <span class="c1"># Increase size by 50% for proven patterns</span>
+    <span class="s1">&#39;normal&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>              <span class="c1"># Standard position size</span>
+    <span class="s1">&#39;underperforming&#39;</span><span class="p">:</span> <span class="mf">0.5</span>      <span class="c1"># Cut size by 50% for failing patterns</span>
+<span class="p">}</span>
+
+<span class="c1"># Pattern Decay and Quality Settings</span>
+<span class="n">PATTERN_DECAY_RATE</span> <span class="o">=</span> <span class="mf">0.95</span>              <span class="c1"># Old trades weighted 5% less per week</span>
+<span class="n">PATTERN_MIN_WIN_RATE</span> <span class="o">=</span> <span class="mf">0.35</span>            <span class="c1"># Flag patterns winning &lt;35% of time</span>
+<span class="n">PATTERN_TARGET_WIN_RATE</span> <span class="o">=</span> <span class="mf">0.60</span>         <span class="c1"># Aim for patterns with 60%+ win rate</span>
+
+<span class="c1"># Weekly Pattern Analysis Schedule</span>
+<span class="n">PATTERN_WEEKLY_ANALYSIS_DAY</span> <span class="o">=</span> <span class="mi">6</span>        <span class="c1"># Run analysis on Sunday (0=Mon, 6=Sun)</span>
+<span class="n">PATTERN_ANALYSIS_HOUR</span> <span class="o">=</span> <span class="mi">18</span>             <span class="c1"># Run at 6 PM</span>
+
+<span class="c1"># Pattern Memory Injection Settings</span>
+<span class="n">PATTERN_MEMORY_BATCH_SIZE</span> <span class="o">=</span> <span class="mi">50</span>         <span class="c1"># Process max 50 patterns at once</span>
+<span class="n">PATTERN_MEMORY_PRIORITY_PATTERNS</span> <span class="o">=</span> <span class="mi">10</span>  <span class="c1"># Focus on top 10 best patterns</span>
+
+<span class="c1"># Pattern Categories (for classification)</span>
+<span class="c1"># These define all possible pattern components</span>
+<span class="n">PATTERN_STRATEGY_TYPES</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;mean_reversion&#39;</span><span class="p">,</span> <span class="s1">&#39;momentum&#39;</span><span class="p">,</span> <span class="s1">&#39;breakout&#39;</span><span class="p">,</span> <span class="s1">&#39;bounce&#39;</span><span class="p">]</span>
+<span class="n">PATTERN_MARKET_REGIMES</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;extreme_fear&#39;</span><span class="p">,</span> <span class="s1">&#39;fear&#39;</span><span class="p">,</span> <span class="s1">&#39;neutral&#39;</span><span class="p">,</span> <span class="s1">&#39;greed&#39;</span><span class="p">,</span> <span class="s1">&#39;extreme_greed&#39;</span><span class="p">]</span>
+<span class="n">PATTERN_VOLUME_PROFILES</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;low&#39;</span><span class="p">,</span> <span class="s1">&#39;normal&#39;</span><span class="p">,</span> <span class="s1">&#39;high&#39;</span><span class="p">,</span> <span class="s1">&#39;explosive&#39;</span><span class="p">]</span>
+<span class="n">PATTERN_TECHNICAL_SETUPS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;oversold&#39;</span><span class="p">,</span> <span class="s1">&#39;neutral&#39;</span><span class="p">,</span> <span class="s1">&#39;overbought&#39;</span><span class="p">]</span>
+
+<span class="c1"># Pattern Tracker Cache Settings</span>
+<span class="c1"># Cache pattern stats to avoid database hits</span>
+<span class="n">PATTERN_CACHE_TIMEOUT</span> <span class="o">=</span> <span class="mi">300</span>            <span class="c1"># Cache for 5 minutes</span>
+<span class="n">PATTERN_CACHE_CLEAN_INTERVAL</span> <span class="o">=</span> <span class="mi">3600</span>    <span class="c1"># Clean old cache entries hourly</span>
+
+<span class="c1"># Pattern Alert Thresholds</span>
+<span class="c1"># When to alert about pattern changes</span>
+<span class="n">PATTERN_BREAKDOWN_MIN_TRADES</span> <span class="o">=</span> <span class="mi">20</span>      <span class="c1"># Need 20+ trades before alerting</span>
+<span class="n">PATTERN_BREAKDOWN_WIN_RATE</span> <span class="o">=</span> <span class="mf">0.30</span>      <span class="c1"># Alert if win rate drops below 30%</span>
+<span class="n">PATTERN_HOT_MIN_TRADES</span> <span class="o">=</span> <span class="mi">10</span>            <span class="c1"># Need 10+ trades to identify &quot;hot&quot;</span>
+<span class="n">PATTERN_HOT_WIN_RATE</span> <span class="o">=</span> <span class="mf">0.80</span>            <span class="c1"># Win rate &gt;80% = hot pattern alert</span>
+
+<span class="c1"># Pattern Recommendation Thresholds</span>
+<span class="c1"># Used to generate trading recommendations</span>
+<span class="n">PATTERN_HOT_RECENT_WIN</span> <span class="o">=</span> <span class="mf">0.70</span>          <span class="c1"># Recent 70%+ wins = &quot;hot&quot; pattern</span>
+<span class="n">PATTERN_HOT_MOMENTUM</span> <span class="o">=</span> <span class="mf">0.10</span>            <span class="c1"># 10%+ momentum = improving pattern</span>
+<span class="n">PATTERN_COLD_RECENT_WIN</span> <span class="o">=</span> <span class="mf">0.35</span>         <span class="c1"># Recent &lt;35% wins = &quot;cold&quot; pattern</span>
+<span class="n">PATTERN_GOOD_EXPECTANCY</span> <span class="o">=</span> <span class="mf">0.02</span>         <span class="c1"># 2%+ expected value = profitable</span>
+<span class="n">PATTERN_BAD_EXPECTANCY</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.01</span>         <span class="c1"># -1% expected value = losing pattern</span>
+
+<span class="c1"># Momentum Description Thresholds</span>
+<span class="c1"># How to describe pattern performance trends</span>
+<span class="n">PATTERN_MOMENTUM_STRONG_UP</span> <span class="o">=</span> <span class="mf">0.15</span>      <span class="c1"># +15% = &quot;strongly improving&quot;</span>
+<span class="n">PATTERN_MOMENTUM_UP</span> <span class="o">=</span> <span class="mf">0.05</span>             <span class="c1"># +5% = &quot;improving&quot;</span>
+<span class="n">PATTERN_MOMENTUM_STRONG_DOWN</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.15</span>   <span class="c1"># -15% = &quot;strongly declining&quot;</span>
+<span class="n">PATTERN_MOMENTUM_DOWN</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.05</span>          <span class="c1"># -5% = &quot;declining&quot;</span>
+
+<span class="c1"># =============================================================================</span>
+<span class="c1"># TRADINGAGENTS CONFIGURATION</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1"># Settings for the TradingAgents AI framework</span>
+
+<span class="n">TRADINGAGENTS_CONFIG</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;llm_provider&#39;</span><span class="p">:</span> <span class="s1">&#39;openai&#39;</span><span class="p">,</span>                    <span class="c1"># LLM provider (openai/anthropic/google)</span>
+    <span class="s1">&#39;backend_url&#39;</span><span class="p">:</span> <span class="s1">&#39;https://api.openai.com/v1&#39;</span><span class="p">,</span>  <span class="c1"># API endpoint</span>
+    <span class="s1">&#39;deep_think_llm&#39;</span><span class="p">:</span> <span class="s1">&#39;gpt-4o-mini&#39;</span><span class="p">,</span>             <span class="c1"># Model for complex analysis</span>
+    <span class="s1">&#39;quick_think_llm&#39;</span><span class="p">:</span> <span class="s1">&#39;gpt-4o-mini&#39;</span><span class="p">,</span>            <span class="c1"># Model for quick decisions ($0.15/1M tokens)</span>
+    <span class="s1">&#39;max_debate_rounds&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>                      <span class="c1"># Rounds of agent debate (more = deeper analysis)</span>
+    <span class="s1">&#39;max_risk_discuss_rounds&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>                <span class="c1"># Risk assessment rounds</span>
+    <span class="s1">&#39;max_recur_limit&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>                      <span class="c1"># Max recursion depth</span>
+    <span class="s1">&#39;online_tools&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>                        <span class="c1"># Use live data (False = cached only)</span>
+    <span class="s1">&#39;results_dir&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">RESULTS_DIR</span><span class="p">),</span>
+    <span class="s1">&#39;data_dir&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">DATA_DIR</span><span class="p">),</span>
+    <span class="s1">&#39;data_cache_dir&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">CACHE_DIR</span><span class="p">),</span>
+<span class="p">}</span>
+
+<span class="c1"># =============================================================================</span>
+<span class="c1"># INTERACTIVE BROKERS (IBKR) CONFIGURATION</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1"># Settings for broker connection</span>
+
+<span class="n">IBKR_HOST</span> <span class="o">=</span> <span class="s1">&#39;127.0.0.1&#39;</span>        <span class="c1"># IB Gateway host (localhost)</span>
+<span class="n">IBKR_PAPER_PORT</span> <span class="o">=</span> <span class="mi">4002</span>         <span class="c1"># Paper trading port (safe testing)</span>
+<span class="n">IBKR_LIVE_PORT</span> <span class="o">=</span> <span class="mi">4001</span>          <span class="c1"># Live trading port (real money)</span>
+<span class="n">IBKR_CLIENT_ID</span> <span class="o">=</span> <span class="mi">1</span>             <span class="c1"># Client ID (1-32, must be unique)</span>
+<span class="n">IBKR_ENABLED</span> <span class="o">=</span> <span class="kc">True</span>            <span class="c1"># Master switch for IBKR</span>
+<span class="n">IBKR_CACHE_TIMEOUT</span> <span class="o">=</span> <span class="mi">60</span>        <span class="c1"># Cache portfolio data for 60 seconds</span>
+
+<span class="c1"># Default to paper trading for safety</span>
+<span class="n">IBKR_DEFAULT_PORT</span> <span class="o">=</span> <span class="n">IBKR_PAPER_PORT</span>
+
+<span class="c1"># =============================================================================</span>
+<span class="c1"># PORTFOLIO DEFAULTS (Fallback values)</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1"># Used when IBKR is unavailable</span>
+
+<span class="n">DEFAULT_CASH</span> <span class="o">=</span> <span class="mi">100000</span>           <span class="c1"># Starting cash balance</span>
+<span class="n">DEFAULT_PORTFOLIO_VALUE</span> <span class="o">=</span> <span class="mi">100000</span>  <span class="c1"># Total portfolio value</span>
+<span class="n">DEFAULT_POSITIONS</span> <span class="o">=</span> <span class="mi">0</span>           <span class="c1"># Number of open positions</span>
+<span class="n">DEFAULT_UNREALIZED_PNL</span> <span class="o">=</span> <span class="mi">0</span>     <span class="c1"># Unrealized P&amp;L</span>
+<span class="n">DEFAULT_RISK_UTILIZATION</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Risk used (0-1)</span>
+
+<span class="c1"># =============================================================================</span>
+<span class="c1"># ANALYSIS SETTINGS</span>
+<span class="c1"># =============================================================================</span>
+
+<span class="n">DEFAULT_ANALYSIS_DATE</span> <span class="o">=</span> <span class="s2">&quot;2024-12-19&quot;</span>  <span class="c1"># Default date for backtesting</span>
+
+<span class="c1"># Batch processing</span>
+<span class="n">BATCH_SIZE</span> <span class="o">=</span> <span class="mi">50</span>                <span class="c1"># Process 50 stocks at a time</span>
+<span class="n">BATCH_TIMEOUT</span> <span class="o">=</span> <span class="mi">300</span>            <span class="c1"># 5 minutes timeout per batch</span>
+
+<span class="c1"># =============================================================================</span>
+<span class="c1"># MARKET REGIME SETTINGS</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1"># Different strategies for different market conditions</span>
+
+<span class="n">REGIME_THRESHOLDS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;extreme_fear&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">25</span><span class="p">),</span>    <span class="c1"># CNN F&amp;G 0-25: Market panic</span>
+    <span class="s1">&#39;fear&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">25</span><span class="p">,</span> <span class="mi">45</span><span class="p">),</span>           <span class="c1"># CNN F&amp;G 25-45: Market worried  </span>
+    <span class="s1">&#39;neutral&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">45</span><span class="p">,</span> <span class="mi">55</span><span class="p">),</span>        <span class="c1"># CNN F&amp;G 45-55: Market balanced</span>
+    <span class="s1">&#39;greed&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">55</span><span class="p">,</span> <span class="mi">75</span><span class="p">),</span>          <span class="c1"># CNN F&amp;G 55-75: Market optimistic</span>
+    <span class="s1">&#39;extreme_greed&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">75</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>  <span class="c1"># CNN F&amp;G 75-100: Market euphoric</span>
+<span class="p">}</span>
+
+<span class="c1"># Position size multipliers by regime</span>
+<span class="c1"># Example: In extreme fear, take 1.5x normal position (contrarian)</span>
+<span class="n">POSITION_MULTIPLIERS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;extreme_fear&#39;</span><span class="p">:</span> <span class="mf">1.5</span><span class="p">,</span>        <span class="c1"># Increase size in panic (buy fear)</span>
+    <span class="s1">&#39;fear&#39;</span><span class="p">:</span> <span class="mf">1.2</span><span class="p">,</span>                <span class="c1"># Slightly increase in fear</span>
+    <span class="s1">&#39;neutral&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>             <span class="c1"># Normal position size</span>
+    <span class="s1">&#39;greed&#39;</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">,</span>               <span class="c1"># Reduce in greed (sell euphoria)</span>
+    <span class="s1">&#39;extreme_greed&#39;</span><span class="p">:</span> <span class="mf">0.5</span>        <span class="c1"># Half size in extreme greed</span>
+<span class="p">}</span>
+
+<span class="c1"># Filter strictness by regime</span>
+<span class="c1"># Higher percentile = fewer, higher quality candidates</span>
+<span class="n">FILTER_PERCENTILES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;extreme_fear&#39;</span><span class="p">:</span> <span class="mi">90</span><span class="p">,</span>         <span class="c1"># Less strict in fear (more opportunities)</span>
+    <span class="s1">&#39;fear&#39;</span><span class="p">:</span> <span class="mi">93</span><span class="p">,</span>                 
+    <span class="s1">&#39;neutral&#39;</span><span class="p">:</span> <span class="mi">95</span><span class="p">,</span>              <span class="c1"># Normal strictness</span>
+    <span class="s1">&#39;greed&#39;</span><span class="p">:</span> <span class="mi">97</span><span class="p">,</span>                <span class="c1"># More strict in greed</span>
+    <span class="s1">&#39;extreme_greed&#39;</span><span class="p">:</span> <span class="mi">99</span>         <span class="c1"># Very strict in euphoria</span>
+<span class="p">}</span>
+
+<span class="c1"># Expected win rates by regime (for position sizing)</span>
+<span class="n">EXPECTED_WIN_RATES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;extreme_fear&#39;</span><span class="p">:</span> <span class="mf">0.80</span><span class="p">,</span>       <span class="c1"># 80% win rate buying panic</span>
+    <span class="s1">&#39;fear&#39;</span><span class="p">:</span> <span class="mf">0.70</span><span class="p">,</span>               <span class="c1"># 70% win rate in fear</span>
+    <span class="s1">&#39;neutral&#39;</span><span class="p">:</span> <span class="mf">0.60</span><span class="p">,</span>            <span class="c1"># 60% baseline win rate</span>
+    <span class="s1">&#39;greed&#39;</span><span class="p">:</span> <span class="mf">0.62</span><span class="p">,</span>              <span class="c1"># Slightly higher in greed</span>
+    <span class="s1">&#39;extreme_greed&#39;</span><span class="p">:</span> <span class="mf">0.55</span>       <span class="c1"># Lower win rate at tops</span>
+<span class="p">}</span>
+
+<span class="c1"># =============================================================================</span>
+<span class="c1"># TRADING PARAMETERS</span>
+<span class="c1"># =============================================================================</span>
+
+<span class="c1"># Position sizing</span>
+<span class="n">MAX_POSITIONS</span> <span class="o">=</span> <span class="mi">5</span>              <span class="c1"># Maximum simultaneous positions</span>
+<span class="n">MAX_POSITION_SIZE_PCT</span> <span class="o">=</span> <span class="mi">20</span>     <span class="c1"># Max 20% of portfolio per position</span>
+<span class="n">BASE_RISK_PCT</span> <span class="o">=</span> <span class="mi">1</span>              <span class="c1"># Risk 1% of portfolio per trade</span>
+
+<span class="c1"># Filter constraints (quality filters)</span>
+<span class="n">MIN_DOLLAR_VOLUME</span> <span class="o">=</span> <span class="mi">5_000_000</span>  <span class="c1"># Minimum $5M daily dollar volume</span>
+<span class="n">MIN_MARKET_CAP</span> <span class="o">=</span> <span class="mi">500_000_000</span>   <span class="c1"># Minimum $500M market cap</span>
+<span class="n">MIN_PRICE</span> <span class="o">=</span> <span class="mf">5.0</span>                <span class="c1"># Minimum $5 stock price</span>
+<span class="n">MAX_SPREAD_PCT</span> <span class="o">=</span> <span class="mf">2.0</span>           <span class="c1"># Maximum 2% bid-ask spread</span>
+
+<span class="c1"># Data settings</span>
+<span class="n">CACHE_DURATION</span> <span class="o">=</span> <span class="mi">900</span>           <span class="c1"># Cache data for 15 minutes</span>
+<span class="n">MAX_CANDIDATES</span> <span class="o">=</span> <span class="mi">30</span>            <span class="c1"># Select top 30 candidates</span>
+<span class="n">EXPLORATION_RATIO</span> <span class="o">=</span> <span class="mf">0.15</span>       <span class="c1"># 15% exploration vs exploitation</span>
+
+<span class="c1"># Stop loss multipliers (based on volatility)</span>
+<span class="n">STOP_LOSS_MULTIPLIERS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;low_vol&#39;</span><span class="p">:</span> <span class="mf">1.5</span><span class="p">,</span>             <span class="c1"># 1.5x ATR for low volatility</span>
+    <span class="s1">&#39;normal&#39;</span><span class="p">:</span> <span class="mf">2.5</span><span class="p">,</span>              <span class="c1"># 2.5x ATR for normal volatility</span>
+    <span class="s1">&#39;high_vol&#39;</span><span class="p">:</span> <span class="mf">3.0</span>             <span class="c1"># 3.0x ATR for high volatility</span>
+<span class="p">}</span>
+
+<span class="c1"># =============================================================================</span>
+<span class="c1"># CNN FEAR &amp; GREED SETTINGS</span>
+<span class="c1"># =============================================================================</span>
+
+<span class="n">CNN_FG_URL</span> <span class="o">=</span> <span class="s2">&quot;https://production.dataviz.cnn.io/index/fearandgreed/graphdata&quot;</span>
+<span class="n">CNN_FG_CACHE_DURATION</span> <span class="o">=</span> <span class="mi">900</span>    <span class="c1"># Cache for 15 minutes</span>
+
+<span class="c1"># =============================================================================</span>
+<span class="c1"># S&amp;P 500 DATA SOURCE</span>
+<span class="c1"># =============================================================================</span>
+
+<span class="n">SP500_CSV_URL</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/datasets/s-and-p-500-companies/main/data/constituents.csv&quot;</span>
+
+<span class="c1"># =============================================================================</span>
+<span class="c1"># LOGGING CONFIGURATION</span>
+<span class="c1"># =============================================================================</span>
+
+<span class="n">LOG_LEVEL</span> <span class="o">=</span> <span class="s2">&quot;INFO&quot;</span>              <span class="c1"># Logging verbosity (DEBUG/INFO/WARNING/ERROR)</span>
+<span class="n">LOG_FORMAT</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%(asctime)s</span><span class="s2"> - </span><span class="si">%(name)s</span><span class="s2"> - </span><span class="si">%(levelname)s</span><span class="s2"> - </span><span class="si">%(message)s</span><span class="s2">&quot;</span>
+<span class="n">LOG_FILE</span> <span class="o">=</span> <span class="n">LOGS_DIR</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;khazad_dum_</span><span class="si">{</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">.log&quot;</span>
+
+<span class="c1"># =============================================================================</span>
+<span class="c1"># HELPER FUNCTIONS</span>
+<span class="c1"># =============================================================================</span>
+
+<div class="viewcode-block" id="get_tradingagents_config">
+<a class="viewcode-back" href="../../../index.html#config.settings.base_config.get_tradingagents_config">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_tradingagents_config</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get TradingAgents configuration dictionary&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">TRADINGAGENTS_CONFIG</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="get_ibkr_config">
+<a class="viewcode-back" href="../../../index.html#config.settings.base_config.get_ibkr_config">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_ibkr_config</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get IBKR configuration dictionary&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s1">&#39;host&#39;</span><span class="p">:</span> <span class="n">IBKR_HOST</span><span class="p">,</span>
+        <span class="s1">&#39;port&#39;</span><span class="p">:</span> <span class="n">IBKR_DEFAULT_PORT</span><span class="p">,</span>
+        <span class="s1">&#39;client_id&#39;</span><span class="p">:</span> <span class="n">IBKR_CLIENT_ID</span><span class="p">,</span>
+        <span class="s1">&#39;enabled&#39;</span><span class="p">:</span> <span class="n">IBKR_ENABLED</span><span class="p">,</span>
+        <span class="s1">&#39;cache_timeout&#39;</span><span class="p">:</span> <span class="n">IBKR_CACHE_TIMEOUT</span>
+    <span class="p">}</span></div>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_validate_numeric_config</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">min_val</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_val</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate numeric configuration values&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Configuration </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> must be numeric, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">min_val</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">value</span> <span class="o">&lt;</span> <span class="n">min_val</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Configuration </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> must be &gt;= </span><span class="si">{</span><span class="n">min_val</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">max_val</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">value</span> <span class="o">&gt;</span> <span class="n">max_val</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Configuration </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> must be &lt;= </span><span class="si">{</span><span class="n">max_val</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">value</span>
+
+<div class="viewcode-block" id="validate_configuration">
+<a class="viewcode-back" href="../../../index.html#config.settings.base_config.validate_configuration">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">validate_configuration</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate critical configuration values&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Validate trading parameters</span>
+        <span class="n">_validate_numeric_config</span><span class="p">(</span><span class="n">MAX_POSITIONS</span><span class="p">,</span> <span class="s2">&quot;MAX_POSITIONS&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+        <span class="n">_validate_numeric_config</span><span class="p">(</span><span class="n">MAX_POSITION_SIZE_PCT</span><span class="p">,</span> <span class="s2">&quot;MAX_POSITION_SIZE_PCT&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+        <span class="n">_validate_numeric_config</span><span class="p">(</span><span class="n">BASE_RISK_PCT</span><span class="p">,</span> <span class="s2">&quot;BASE_RISK_PCT&quot;</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+        
+        <span class="c1"># Validate thresholds</span>
+        <span class="k">for</span> <span class="n">regime</span><span class="p">,</span> <span class="p">(</span><span class="n">min_val</span><span class="p">,</span> <span class="n">max_val</span><span class="p">)</span> <span class="ow">in</span> <span class="n">REGIME_THRESHOLDS</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">min_val</span> <span class="o">&gt;=</span> <span class="n">max_val</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid regime threshold for </span><span class="si">{</span><span class="n">regime</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">min_val</span><span class="si">}</span><span class="s2"> &gt;= </span><span class="si">{</span><span class="n">max_val</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">_validate_numeric_config</span><span class="p">(</span><span class="n">min_val</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;REGIME_THRESHOLDS[</span><span class="si">{</span><span class="n">regime</span><span class="si">}</span><span class="s2">][0]&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+            <span class="n">_validate_numeric_config</span><span class="p">(</span><span class="n">max_val</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;REGIME_THRESHOLDS[</span><span class="si">{</span><span class="n">regime</span><span class="si">}</span><span class="s2">][1]&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+        
+        <span class="c1"># Validate paths exist</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">PROJECT_ROOT</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Project root does not exist: </span><span class="si">{</span><span class="n">PROJECT_ROOT</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="kc">True</span>
+        
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Configuration validation failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="ne">UserWarning</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="load_api_keys_from_env">
+<a class="viewcode-back" href="../../../index.html#config.settings.base_config.load_api_keys_from_env">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">load_api_keys_from_env</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Securely load API keys from .env file with validation&quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">OPENAI_API_KEY</span><span class="p">,</span> <span class="n">FINNHUB_API_KEY</span><span class="p">,</span> <span class="n">POLYGON_API_KEY</span><span class="p">,</span> <span class="n">ALPHA_VANTAGE_KEY</span>
+    
+    <span class="c1"># Only try to load from file if keys are missing</span>
+    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">key</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="n">OPENAI_API_KEY</span><span class="p">,</span> <span class="n">FINNHUB_API_KEY</span><span class="p">]):</span>
+        <span class="k">if</span> <span class="n">ENV_FILE_PATH</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">ENV_FILE_PATH</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">line_num</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+                        <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                        
+                        <span class="c1"># Skip comments and empty lines</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span> <span class="ow">or</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;#&#39;</span><span class="p">):</span>
+                            <span class="k">continue</span>
+                        
+                        <span class="k">if</span> <span class="s1">&#39;=&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                            <span class="k">continue</span>
+                            
+                        <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                        <span class="n">key</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                        <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;&quot;</span><span class="se">\&#39;</span><span class="s1">&#39;</span><span class="p">)</span>
+                        
+                        <span class="c1"># Validate and set API keys</span>
+                        <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;OPENAI_API_KEY&quot;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">OPENAI_API_KEY</span><span class="p">:</span>
+                            <span class="n">OPENAI_API_KEY</span> <span class="o">=</span> <span class="n">_validate_api_key</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;OpenAI&quot;</span><span class="p">)</span>
+                            <span class="k">if</span> <span class="n">OPENAI_API_KEY</span><span class="p">:</span>
+                                <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;OPENAI_API_KEY&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">OPENAI_API_KEY</span>
+                                
+                        <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;FINNHUB_API_KEY&quot;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">FINNHUB_API_KEY</span><span class="p">:</span>
+                            <span class="n">FINNHUB_API_KEY</span> <span class="o">=</span> <span class="n">_validate_api_key</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;Finnhub&quot;</span><span class="p">)</span>
+                            <span class="k">if</span> <span class="n">FINNHUB_API_KEY</span><span class="p">:</span>
+                                <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;FINNHUB_API_KEY&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">FINNHUB_API_KEY</span>
+                                
+                        <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;POLYGON_API_KEY&quot;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">POLYGON_API_KEY</span><span class="p">:</span>
+                            <span class="n">POLYGON_API_KEY</span> <span class="o">=</span> <span class="n">_validate_api_key</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;Polygon&quot;</span><span class="p">)</span>
+                            <span class="k">if</span> <span class="n">POLYGON_API_KEY</span><span class="p">:</span>
+                                <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;POLYGON_API_KEY&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">POLYGON_API_KEY</span>
+                                
+                        <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;ALPHA_VANTAGE_KEY&quot;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">ALPHA_VANTAGE_KEY</span><span class="p">:</span>
+                            <span class="n">ALPHA_VANTAGE_KEY</span> <span class="o">=</span> <span class="n">_validate_api_key</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;Alpha Vantage&quot;</span><span class="p">)</span>
+                            <span class="k">if</span> <span class="n">ALPHA_VANTAGE_KEY</span><span class="p">:</span>
+                                <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;ALPHA_VANTAGE_KEY&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ALPHA_VANTAGE_KEY</span>
+                        
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error loading .env file: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="ne">UserWarning</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;.env file not found at </span><span class="si">{</span><span class="n">ENV_FILE_PATH</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="ne">UserWarning</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">OPENAI_API_KEY</span><span class="p">,</span> <span class="n">FINNHUB_API_KEY</span></div>
+
+
+<div class="viewcode-block" id="get_database_config">
+<a class="viewcode-back" href="../../../index.html#config.settings.base_config.get_database_config">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_database_config</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get database configuration with validation&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s1">&#39;path&#39;</span><span class="p">:</span> <span class="n">DATABASE_PATH</span><span class="p">,</span>
+        <span class="s1">&#39;exists&#39;</span><span class="p">:</span> <span class="n">DATABASE_PATH</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="k">if</span> <span class="n">DATABASE_PATH</span> <span class="k">else</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s1">&#39;writable&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">access</span><span class="p">(</span><span class="n">DATABASE_PATH</span><span class="o">.</span><span class="n">parent</span> <span class="k">if</span> <span class="n">DATABASE_PATH</span> <span class="k">else</span> <span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">W_OK</span><span class="p">)</span>
+    <span class="p">}</span></div>
+
+
+<span class="c1"># Load and validate configuration on import</span>
+<span class="n">load_api_keys_from_env</span><span class="p">()</span>
+<span class="n">validate_configuration</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, FeanorKingofNoldor.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

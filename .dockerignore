@@ -1,0 +1,121 @@
+# ==============================================================================
+# KHAZAD-DÛM DOCKER IGNORE
+# Optimize build context and avoid copying unnecessary files
+# ==============================================================================
+
+# Git files
+.git
+.gitignore
+.gitattributes
+
+# Python cache and compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs and data (will be handled by volumes)
+logs/
+*.log
+data/
+cache/
+results/
+
+# Test files
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# Documentation
+docs/
+*.md
+LICENSE
+
+# Docker files (don't copy Docker files into the image)
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# Environment files (secrets)
+.env
+.env.*
+
+# Backup and temporary files
+*.bak
+*.tmp
+*.swp
+*.backup
+
+# Database files (will use volumes)
+*.db
+*.sqlite
+*.sqlite3
+
+# Large datasets
+*.csv
+*.json
+*.parquet
+
+# Jupyter notebooks
+.ipynb_checkpoints/
+*.ipynb
+
+# Local configuration
+local_config.py
+private_config.py
+
+# Deployment files
+deploy/
+scripts/
+maintenance/
+
+# Monitoring and profiling
+.prof
+
+# Node modules (if any)
+node_modules/
+
+# Terraform state
+*.tfstate
+*.tfstate.backup
+.terraform/

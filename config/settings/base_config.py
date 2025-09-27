@@ -33,14 +33,40 @@ ENV_FILE_PATH = TRADINGAGENTS_LIB_PATH / ".env"
 # =============================================================================
 # API KEYS AND AUTHENTICATION
 # =============================================================================
-# These will be loaded from environment or .env file
+# Secure API key loading with validation
 
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-FINNHUB_API_KEY = os.getenv("FINNHUB_API_KEY")
-POLYGON_API_KEY = os.getenv("POLYGON_API_KEY")
-ALPHA_VANTAGE_KEY = os.getenv("ALPHA_VANTAGE_KEY")
-REDDIT_CLIENT_ID = os.getenv("REDDIT_CLIENT_ID")
-REDDIT_CLIENT_SECRET = os.getenv("REDDIT_CLIENT_SECRET")
+import warnings
+from typing import Optional
+
+def _get_required_env_var(var_name: str, default_value: Optional[str] = None) -> Optional[str]:
+    """Securely get environment variable with optional warning for missing keys"""
+    value = os.getenv(var_name, default_value)
+    if not value and not default_value:
+        warnings.warn(f"Missing required environment variable: {var_name}", UserWarning)
+    return value
+
+def _validate_api_key(key: Optional[str], service_name: str) -> Optional[str]:
+    """Validate API key format and warn if missing"""
+    if not key:
+        return None
+    
+    # Basic validation - ensure it's not obviously fake or placeholder
+    if key.lower() in ['your_key_here', 'placeholder', 'changeme', 'test']:
+        warnings.warn(f"Invalid placeholder {service_name} API key detected", UserWarning)
+        return None
+    
+    if len(key) < 10:  # Most API keys are longer than 10 chars
+        warnings.warn(f"Suspiciously short {service_name} API key", UserWarning)
+    
+    return key
+
+# Load API keys with validation
+OPENAI_API_KEY = _validate_api_key(_get_required_env_var("OPENAI_API_KEY"), "OpenAI")
+FINNHUB_API_KEY = _validate_api_key(_get_required_env_var("FINNHUB_API_KEY"), "Finnhub")
+POLYGON_API_KEY = _validate_api_key(_get_required_env_var("POLYGON_API_KEY"), "Polygon")
+ALPHA_VANTAGE_KEY = _validate_api_key(_get_required_env_var("ALPHA_VANTAGE_KEY"), "Alpha Vantage")
+REDDIT_CLIENT_ID = _validate_api_key(_get_required_env_var("REDDIT_CLIENT_ID"), "Reddit Client")
+REDDIT_CLIENT_SECRET = _validate_api_key(_get_required_env_var("REDDIT_CLIENT_SECRET"), "Reddit Secret")
 
 # =============================================================================
 # PATTERN SYSTEM CONFIGURATION
@@ -327,23 +353,103 @@ def get_ibkr_config():
         'cache_timeout': IBKR_CACHE_TIMEOUT
     }
 
-def load_api_keys_from_env():
-    """Load API keys from .env file if not in environment"""
-    global OPENAI_API_KEY, FINNHUB_API_KEY
+def _validate_numeric_config(value, name: str, min_val=None, max_val=None):
+    """Validate numeric configuration values"""
+    if not isinstance(value, (int, float)):
+        raise ValueError(f"Configuration {name} must be numeric, got {type(value).__name__}")
     
-    if not OPENAI_API_KEY or not FINNHUB_API_KEY:
+    if min_val is not None and value < min_val:
+        raise ValueError(f"Configuration {name} must be >= {min_val}, got {value}")
+    
+    if max_val is not None and value > max_val:
+        raise ValueError(f"Configuration {name} must be <= {max_val}, got {value}")
+    
+    return value
+
+def validate_configuration():
+    """Validate critical configuration values"""
+    try:
+        # Validate trading parameters
+        _validate_numeric_config(MAX_POSITIONS, "MAX_POSITIONS", 1, 20)
+        _validate_numeric_config(MAX_POSITION_SIZE_PCT, "MAX_POSITION_SIZE_PCT", 5, 50)
+        _validate_numeric_config(BASE_RISK_PCT, "BASE_RISK_PCT", 0.1, 10)
+        
+        # Validate thresholds
+        for regime, (min_val, max_val) in REGIME_THRESHOLDS.items():
+            if min_val >= max_val:
+                raise ValueError(f"Invalid regime threshold for {regime}: {min_val} >= {max_val}")
+            _validate_numeric_config(min_val, f"REGIME_THRESHOLDS[{regime}][0]", 0, 100)
+            _validate_numeric_config(max_val, f"REGIME_THRESHOLDS[{regime}][1]", 0, 100)
+        
+        # Validate paths exist
+        if not PROJECT_ROOT.exists():
+            raise ValueError(f"Project root does not exist: {PROJECT_ROOT}")
+        
+        return True
+        
+    except Exception as e:
+        warnings.warn(f"Configuration validation failed: {e}", UserWarning)
+        return False
+
+def load_api_keys_from_env():
+    """Securely load API keys from .env file with validation"""
+    global OPENAI_API_KEY, FINNHUB_API_KEY, POLYGON_API_KEY, ALPHA_VANTAGE_KEY
+    
+    # Only try to load from file if keys are missing
+    if any(key is None for key in [OPENAI_API_KEY, FINNHUB_API_KEY]):
         if ENV_FILE_PATH.exists():
-            with open(ENV_FILE_PATH, 'r') as f:
-                for line in f:
-                    line = line.strip()
-                    if line.startswith("OPENAI_API_KEY="):
-                        OPENAI_API_KEY = line.split("=", 1)[1]
-                        os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
-                    elif line.startswith("FINNHUB_API_KEY="):
-                        FINNHUB_API_KEY = line.split("=", 1)[1]
-                        os.environ["FINNHUB_API_KEY"] = FINNHUB_API_KEY
+            try:
+                with open(ENV_FILE_PATH, 'r', encoding='utf-8') as f:
+                    for line_num, line in enumerate(f, 1):
+                        line = line.strip()
+                        
+                        # Skip comments and empty lines
+                        if not line or line.startswith('#'):
+                            continue
+                        
+                        if '=' not in line:
+                            continue
+                            
+                        key, value = line.split('=', 1)
+                        key = key.strip()
+                        value = value.strip().strip('"\'')
+                        
+                        # Validate and set API keys
+                        if key == "OPENAI_API_KEY" and not OPENAI_API_KEY:
+                            OPENAI_API_KEY = _validate_api_key(value, "OpenAI")
+                            if OPENAI_API_KEY:
+                                os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
+                                
+                        elif key == "FINNHUB_API_KEY" and not FINNHUB_API_KEY:
+                            FINNHUB_API_KEY = _validate_api_key(value, "Finnhub")
+                            if FINNHUB_API_KEY:
+                                os.environ["FINNHUB_API_KEY"] = FINNHUB_API_KEY
+                                
+                        elif key == "POLYGON_API_KEY" and not POLYGON_API_KEY:
+                            POLYGON_API_KEY = _validate_api_key(value, "Polygon")
+                            if POLYGON_API_KEY:
+                                os.environ["POLYGON_API_KEY"] = POLYGON_API_KEY
+                                
+                        elif key == "ALPHA_VANTAGE_KEY" and not ALPHA_VANTAGE_KEY:
+                            ALPHA_VANTAGE_KEY = _validate_api_key(value, "Alpha Vantage")
+                            if ALPHA_VANTAGE_KEY:
+                                os.environ["ALPHA_VANTAGE_KEY"] = ALPHA_VANTAGE_KEY
+                        
+            except Exception as e:
+                warnings.warn(f"Error loading .env file: {e}", UserWarning)
+        else:
+            warnings.warn(f".env file not found at {ENV_FILE_PATH}", UserWarning)
     
     return OPENAI_API_KEY, FINNHUB_API_KEY
 
-# Load API keys on import
+def get_database_config():
+    """Get database configuration with validation"""
+    return {
+        'path': DATABASE_PATH,
+        'exists': DATABASE_PATH.exists() if DATABASE_PATH else False,
+        'writable': os.access(DATABASE_PATH.parent if DATABASE_PATH else '.', os.W_OK)
+    }
+
+# Load and validate configuration on import
 load_api_keys_from_env()
+validate_configuration()
